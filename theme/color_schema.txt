@@ -1,0 +1,4 @@
+dark gray: #403D3C
+Atomic green: #10FF10
+Atomic blue: #1c3aff
+Atomic red: #bd2520

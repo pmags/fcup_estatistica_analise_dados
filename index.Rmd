@@ -1,0 +1,30 @@
+--- 
+title: "Titel"
+subtitle: "Subtitle"
+author: "name"
+date: "date"
+site: bookdown::bookdown_site
+geometry: margin=2.5cm
+documentclass: article
+link-citations: yes
+pdf-cover-image: theme/images/cover.pdf
+cover-image: theme/images/cover.pdf
+---
+
+
+
+# Introduction 
+
+## Goals and objectives
+
+Text
+ 
+## Assumptions
+
+Text
+
+## Definitions
+
+Text
+
+\newpage

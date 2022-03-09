@@ -1,0 +1,24 @@
+bookdown::gitbook:
+  css: "_theme/style.css"
+  config:
+    toc:
+      before: |
+        <li><a href="./">Title</a></li>
+      after: |
+        <li><a href="https://www.mosaic.pt" target="blank"></a></li>
+    download: ["pdf"]
+bookdown::pdf_book:
+  includes:
+      in_header: theme/MathStyle.sty
+      before_body: theme/before_body.tex
+      #after_body: theme/after_body.tex
+  keep_tex: yes
+  latex_engine: xelatex
+  dev: "cairo_pdf"
+  citation_package: natbib
+  template: theme/MathTemplate.tex
+  toc_title: "Índice"
+  toc_depth: 3
+  toc_appendix: yes
+bookdown::powerpoint_presentation2:
+  

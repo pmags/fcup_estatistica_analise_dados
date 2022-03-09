@@ -1,0 +1,11 @@
+output_dir: build
+before_chapter_script: ["scripts/pre_render.R"]
+delete_merged_file: true
+rmd_subdir: ["notebooks"]
+language:
+  label:
+    fig: "Fig. "
+    tab: "Tabela. "
+  ui:
+    chapter_name: ""
+
