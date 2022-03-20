@@ -8,7 +8,7 @@ editor_options:
 ```{r  echo=FALSE, message=FALSE, warning=FALSE, cache=FALSE}
 
 #source("scripts/eda.R", local = TRUE, encoding = "UTF-8")
-#source("scripts/transformations.R", local = TRUE, encoding = "UTF-8")
+source("scripts/univariable_eda.R", local = TRUE, encoding = "UTF-8")
 
 knitr::opts_chunk$set(fig.align="center", echo=FALSE, fig.show = "hold")
 
@@ -16,6 +16,175 @@ knitr::opts_chunk$set(fig.align="center", echo=FALSE, fig.show = "hold")
 
 
 # Data Exploration
+
+
+
+## HoleType     
+
+```{r}
+
+grid.draw(eda_map$HoleType)
+
+```
+
+
+## MaxDepth
+
+```{r}
+
+grid.draw(eda_map$MaxDepth) 
+
+```
+
+## DepthFrom
+
+```{r}
+
+grid.draw(eda_map$DepthFrom)
+
+```
+
+
+## DepthTo
+
+```{r}
+
+grid.draw(eda_map$DepthTo)
+
+```
+
+
+## Cr2O3_%
+
+```{r}
+
+grid.draw(eda_map$`Cr2O3_%`)
+
+```
+
+
+## FeO_%
+
+
+```{r}
+
+grid.draw(eda_map$`FeO_%`)
+
+```
+
+
+## SiO2_%
+
+```{r}
+
+grid.draw(eda_map$`SiO2_%`)
+
+```
+
+
+## MgO_%
+
+
+```{r}
+
+grid.draw(eda_map$`MgO_%`)
+
+```
+
+
+## Al2O3_%
+
+```{r}
+
+grid.draw(eda_map$`Al2O3_%`)
+
+```
+
+
+## CaO_%
+
+```{r}
+
+grid.draw(eda_map$`CaO_%`)
+
+```
+
+
+## P_%
+
+
+```{r}
+
+grid.draw(eda_map$`P_%`)
+
+```
+
+
+## Au_ICP_ppm
+
+
+```{r}
+
+grid.draw(eda_map$Au_ICP_ppm)
+
+```
+
+
+## Pt_ICP_ppm
+
+```{r}
+
+grid.draw(eda_map$Pt_ICP_ppm)
+
+```
+
+
+## Pd_ICP_ppm
+
+
+```{r}
+
+grid.draw(eda_map$Pd_ICP_ppm)
+
+```
+
+
+## Rh_ICP_ppm
+
+```{r}
+
+grid.draw(eda_map$Rh_ICP_ppm)
+
+```
+
+
+## Ir_ICP_ppm
+
+
+```{r}
+
+grid.draw(eda_map$Ir_ICP_ppm)
+
+```
+
+
+## Ru_ICP_ppm
+
+```{r}
+
+grid.draw(eda_map$Ru_ICP_ppm)
+
+```
+
+
+## Stratigraphy 
+
+
+```{r}
+
+grid.draw(eda_map$Stratigraphy)
+
+```
 
 
 

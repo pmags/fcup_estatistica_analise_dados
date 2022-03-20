@@ -186,7 +186,7 @@ eda_discrete <- function(data, x, t = "bought") {
 #' @examples
 #' don't run
 #' grid.draw(x) #to view return object
-eda_categorical <- function(data, x, t = "bought") {
+eda_categorical <- function(data, x) {
   
   layout <- rbind(
     c(1,2),
@@ -203,7 +203,7 @@ eda_categorical <- function(data, x, t = "bought") {
     ) +
     theme(axis.text.x = element_text(angle = 30, hjust = 1, vjust = 1))
   
-  freq_plot_compare <- ggplot(data, aes( x = .data[[x]], fill = .data[[t]] )) +
+  freq_plot_compare <- ggplot(data, aes( x = .data[[x]] )) +
     geom_bar() +
     theme_masterDS() +
     labs(
