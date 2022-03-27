@@ -8,7 +8,7 @@ editor_options:
 ```{r  echo=FALSE, message=FALSE, warning=FALSE, cache=FALSE}
 
 #source("scripts/eda.R", local = TRUE, encoding = "UTF-8")
-source("scripts/univariable_eda.R", local = TRUE, encoding = "UTF-8")
+source("../scripts/univariable_eda.R", local = TRUE, encoding = "UTF-8")
 
 knitr::opts_chunk$set(fig.align="center", echo=FALSE, fig.show = "hold")
 
@@ -26,6 +26,7 @@ knitr::opts_chunk$set(fig.align="center", echo=FALSE, fig.show = "hold")
 grid.draw(eda_map$HoleType)
 
 ```
+A variável **Holetype** que representa o tipo do buraco feito para coleta da amostra de cromitita em uma das sessõe da mina do complexo de Bushveld. A variável é categórica sendo que a maior prediminância da classe sendo o buraco feito por meio de um **poço artesiano** e a outra classe sendo o buraco feito por meio de **deflexão**.
 
 
 ## MaxDepth
@@ -35,6 +36,8 @@ grid.draw(eda_map$HoleType)
 grid.draw(eda_map$MaxDepth) 
 
 ```
+**MaxDepth** é a profundidade máxima do buraco utilizado para coleta da amostra de cromitita para a análise química. A váriável é contínua com distribuição multimodal, vemos também que o box-plot não apresenta presença de outliers e aparentemente a média e o desvio padrão são boas medidas de tendência central.  
+
 
 ## DepthFrom
 
@@ -43,6 +46,7 @@ grid.draw(eda_map$MaxDepth)
 grid.draw(eda_map$DepthFrom)
 
 ```
+**DepthFrom** é a profundidade inicial de onde a amostra de cromitita foi coletada para a análise química. A váriável é contínua com distribuição gamma. O box-plot indica a presença de outliers, mas no contexto da coleta de amostras de cromitita para análise quimica esses valores não se confirmam como outliers e sim como prováveis de acontecer. Observamos por meio da distribuição desta variável que temos alguns valores com grande magnitude e desta forma a mediana e os valores máximo e mínimo são boas medidas de tendência central.  
 
 
 ## DepthTo
@@ -52,6 +56,7 @@ grid.draw(eda_map$DepthFrom)
 grid.draw(eda_map$DepthTo)
 
 ```
+**DepthTo** é a profundidade final de onde a amostra de cromitita foi coletada para a análise química. A váriável é contínua com distribuição gamma. O box-plot indica a presença de outliers, mas no contexto da coleta de amostras de cromitita para análise quimica esses valores não se confirmam como outliers e sim como prováveis de acontecer. Observamos por meio da distribuição desta variável que temos alguns valores com grande magnitude e desta forma a mediana e os valores máximo e mínimo são boas medidas de tendência central.  
 
 
 ## Cr2O3_%
@@ -61,16 +66,17 @@ grid.draw(eda_map$DepthTo)
 grid.draw(eda_map$`Cr2O3_%`)
 
 ```
+**Cr2O3_%** representa o percentual de **óxido de cromo** contido na amostra de cromitita analisada. A váriável é contínua com distribuição bimodal, o box-plot sugere a presença de outliers. Por possuir alguns valores de grande amplitude a mediana e os valores máximo e mínimo são boas medidas de tendência central.  
 
 
 ## FeO_%
-
 
 ```{r}
 
 grid.draw(eda_map$`FeO_%`)
 
 ```
+**FeO_%** representa o percentual de **óxido de ferro** contido na amostra de cromitita analisada. A váriável é contínua com distribuição normal, o box-plot sugere a presença de outliers. Como a distribuição desta variável se assemelha a uma distribuição normal a média e o desvio padrão são boas medidas de tendência central. 
 
 
 ## SiO2_%
@@ -80,16 +86,17 @@ grid.draw(eda_map$`FeO_%`)
 grid.draw(eda_map$`SiO2_%`)
 
 ```
+**SiO2_%** representa o percentual de **dióxido de silício** contido na amostra de cromitita analisada. A váriável é contínua com distribuição bimodal, o box-plot sugere a presença de outliers. E, por possuir alguns valores de grande amplitude a mediana e os valores máximo e mínimo são boas medidas de tendência central.  
 
 
 ## MgO_%
-
 
 ```{r}
 
 grid.draw(eda_map$`MgO_%`)
 
 ```
+**MgO_%** representa o percentual de **óxido de magnésio** contido na amostra de cromitita analisada. A váriável é contínua com distribuição normal, o box-plot sugere a presença de outliers. Como a distribuição desta variável se assemelha a uma distribuição normal a média e o desvio padrão são boas medidas de tendência central. 
 
 
 ## Al2O3_%
@@ -99,6 +106,7 @@ grid.draw(eda_map$`MgO_%`)
 grid.draw(eda_map$`Al2O3_%`)
 
 ```
+**Al2O3_%** representa o percentual de **óxido de alumínio** contido na amostra de cromitita analisada. A váriável é contínua com distribuição bimodal, o box-plot sugere a presença de outliers. E, por possuir alguns valores de grande amplitude a mediana e os valores máximo e mínimo são boas medidas de tendência central.  
 
 
 ## CaO_%
@@ -108,26 +116,27 @@ grid.draw(eda_map$`Al2O3_%`)
 grid.draw(eda_map$`CaO_%`)
 
 ```
+**CaO_%** representa o percentual de **óxido de cálcio** contido na amostra de cromitita analisada. A váriável é contínua com distribuição bimodal, o box-plot sugere a presença de outliers. E, por possuir alguns valores de grande amplitude a mediana e os valores máximo e mínimo são boas medidas de tendência central.  
 
 
 ## P_%
-
 
 ```{r}
 
 grid.draw(eda_map$`P_%`)
 
 ```
+**P_%** representa o percentual de **fósfoto** contido na amostra de cromitita analisada. A váriável é contínua com distribuição similar a uma gamma ou poisson, o box-plot sugere a presença de outliers. E, por possuir alguns valores de grande amplitude a mediana e os valores máximo e mínimo são boas medidas de tendência central.  
 
 
 ## Au_ICP_ppm
-
 
 ```{r}
 
 grid.draw(eda_map$Au_ICP_ppm)
 
 ```
+**Au_ICP_ppm** representa as partes por milhão de ICP (Plasma Acoplado Indutivamente) de **ouro** contido na amostra de cromitita analisada. A váriável é contínua com distribuição similar a uma gamma ou poisson, o box-plot sugere a presença de outliers. E, por possuir alguns valores de grande amplitude a mediana e os valores máximo e mínimo são boas medidas de tendência central.  
 
 
 ## Pt_ICP_ppm
@@ -137,16 +146,17 @@ grid.draw(eda_map$Au_ICP_ppm)
 grid.draw(eda_map$Pt_ICP_ppm)
 
 ```
+**Pt_ICP_ppm** representa as partes por milhão de ICP (Plasma Acoplado Indutivamente) de **platina** contido na amostra de cromitita analisada. A váriável é contínua com distribuição bimodal, o box-plot sugere a presença de outliers. E, por possuir alguns valores de grande amplitude a mediana e os valores máximo e mínimo são boas medidas de tendência central. 
 
 
 ## Pd_ICP_ppm
-
 
 ```{r}
 
 grid.draw(eda_map$Pd_ICP_ppm)
 
 ```
+**Pd_ICP_ppm** representa as partes por milhão de ICP (Plasma Acoplado Indutivamente) de **paládio** contido na amostra de cromitita analisada. A váriável é contínua com distribuição gamma, o box-plot sugere a presença de outliers. E, por possuir alguns valores de grande amplitude a mediana e os valores máximo e mínimo são boas medidas de tendência central. 
 
 
 ## Rh_ICP_ppm
@@ -156,17 +166,17 @@ grid.draw(eda_map$Pd_ICP_ppm)
 grid.draw(eda_map$Rh_ICP_ppm)
 
 ```
+**Rh_ICP_ppm** representa as partes por milhão de ICP (Plasma Acoplado Indutivamente) de **ródio** contido na amostra de cromitita analisada. A váriável é contínua com distribuição gamma, o box-plot sugere a presença de outliers. E, por possuir alguns valores de grande amplitude a mediana e os valores máximo e mínimo são boas medidas de tendência central. 
 
 
 ## Ir_ICP_ppm
-
 
 ```{r}
 
 grid.draw(eda_map$Ir_ICP_ppm)
 
 ```
-
+**Ir_ICP_ppm** representa as partes por milhão de ICP (Plasma Acoplado Indutivamente) de **irídio** contido na amostra de cromitita analisada. A váriável é contínua com distribuição bimodal, o box-plot sugere a presença de outliers. E, por possuir alguns valores de grande amplitude a mediana e os valores máximo e mínimo são boas medidas de tendência central.
 
 ## Ru_ICP_ppm
 
@@ -175,17 +185,19 @@ grid.draw(eda_map$Ir_ICP_ppm)
 grid.draw(eda_map$Ru_ICP_ppm)
 
 ```
+**Ru_ICP_ppm** representa as partes por milhão de ICP (Plasma Acoplado Indutivamente) de **ruténio** contido na amostra de cromitita analisada. A váriável é contínua com distribuição gamma, o box-plot sugere a presença de outliers. E, por possuir alguns valores de grande amplitude a mediana e os valores máximo e mínimo são boas medidas de tendência central. 
+
+**Observação:** para todas as variáveis que representam as análises químicas tanto o percentual quanto as partes por milhão de ICP (Plasma Acoplado Indutivamente) vimos que o box-plot sugere a presença de outliers, porem esses valores atípicos podem desafiar um esquema de discriminação, mas parecem ser bastante comuns no Complexo Bushveld e são comumente atribuídos a heterogeneidades locais nos cromititos, por exemplo, a presença de grandes oikocristais de piroxênio ou uma concentração elevada de plagioclásio. E, por se tratar de fenômenos que podem ocorrer, nós não iremos eliminar os outlies dessas variáveis.
 
 
 ## Stratigraphy 
-
 
 ```{r}
 
 grid.draw(eda_map$Stratigraphy)
 
 ```
-
+**Stratigraphy** representa a posição estratigráfica das camadas de cromitita dentro da **Zona Crítica** a partir da base para cima. A váriável é categorica multiclasse. Através do gráfico de frequência observamos que existem 6 zonas críticas pouco frequentes, 4 zonas críticas com frequência média e 4 zonas críticas de alta frequência.
 
 
 \newpage
