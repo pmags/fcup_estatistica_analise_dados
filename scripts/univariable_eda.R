@@ -5,7 +5,7 @@ library(tidyverse)
 library(readr)
 library(corrplot)
 
-source("scripts/eda_helper.R", local = TRUE, encoding = "UTF-8")
+source("./scripts/eda_helper.R", local = TRUE, encoding = "UTF-8")
 
 
 # collect variables -------------------------------------------------------
@@ -18,7 +18,12 @@ data <-
              escape_double = FALSE, 
              trim_ws = TRUE)
 
-2## Get individual features names and type
+## Transforming MaxDepth in categorical
+data$MaxDepth2 <- cut(data$MaxDepth, breaks = c(-Inf,200, 400,Inf), right=FALSE, labels=c("Low", "Middle", "Depth"))
+data$MaxDepth2 <- as.character(data$MaxDepth2) 
+
+
+## Get individual features names and type
 
 features_character <- 
   data %>%

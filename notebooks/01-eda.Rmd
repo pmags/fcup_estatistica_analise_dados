@@ -33,10 +33,10 @@ A variável **Holetype** que representa o tipo do buraco feito para coleta da am
 
 ```{r}
 
-grid.draw(eda_map$MaxDepth) 
+grid.draw(eda_map$MaxDepth2) 
 
 ```
-**MaxDepth** é a profundidade máxima do buraco utilizado para coleta da amostra de cromitita para a análise química. A váriável é contínua com distribuição multimodal, vemos também que o box-plot não apresenta presença de outliers e aparentemente a média e o desvio padrão são boas medidas de tendência central.  
+**MaxDepth** é a profundidade máxima do buraco utilizado para coleta da amostra de cromitita para a análise química. A váriável é categórica sendo que as classes **"Low"** e **"Middle"** tem praticamente a mesma proporção e a classe **"Depth"** tem aproximadamente o dobro da proporção das outras duas.  
 
 
 ## DepthFrom

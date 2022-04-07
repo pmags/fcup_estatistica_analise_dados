@@ -13,8 +13,8 @@
 
 library(gridExtra)
 library(grid)
-library(ggplot2)
-
+library(ggplot2)                        # Install & load scales package
+library("scales")
 
 # Main theme --------------------------------------------------------------
 
@@ -212,10 +212,19 @@ eda_categorical <- function(data, x) {
       title = "Frequency bought vs no bought"
     )
   
+  freq_plot_compare2 <- ggplot(data, aes( x = .data[[x]] )) +                             # Draw barchart with ggplot2 package
+    geom_bar(aes(y = (..count..)/sum(..count..))) + 
+    scale_y_continuous(labels = percent) +
+    labs(
+      x = "",
+      y = "",
+      title = "Proportion"
+    )
+  
   
   summary <- data %>% select(all_of(x)) %>% summary()
   
-  grid <- arrangeGrob(freq_plot, tableGrob(summary), freq_plot_compare,
+  grid <- arrangeGrob(freq_plot, tableGrob(summary), freq_plot_compare2,
                       layout_matrix = layout)
   
   return( grid )
