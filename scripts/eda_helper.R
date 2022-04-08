@@ -61,7 +61,7 @@ eda_continuous <- function(data, x, t = "bought") {
   
   layout <- rbind(
     c(1,2,3),
-    c(4,4,4)
+    c(4,4,5)
   )
   
   # density plot
@@ -95,7 +95,11 @@ eda_continuous <- function(data, x, t = "bought") {
   
   summary <- data %>% select(all_of(x)) %>% summary()
   
-  grid <- arrangeGrob(qqplot, boxplot,tableGrob(summary), density,
+  cv <- data.frame(CV = c(round(sd(data[[x]], na.rm = T)/mean(data[[x]], na.rm = T)*100, 4)))
+  colnames(cv) <- c("CV_%")
+  rownames(cv) <- c("")
+  
+  grid <- arrangeGrob(qqplot, boxplot, tableGrob(summary), density, tableGrob(cv),
                       layout_matrix = layout)  
   
   return(grid)
