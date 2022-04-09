@@ -166,6 +166,13 @@ eda_discrete <- function(data, x, t = "bought") {
   
   summary <- data %>% select(all_of(x)) %>% summary()
   
+  # added coefficient variance which is sd/mu
+  
+  cv <- sd(data, na.rm = TRUE)/mean(data,na.rm = TRUE) * 100
+  
+  summary[length(summary) + 1] <- cv
+  summary <- setNames(summary,c(names(summary),"Var. Coef"))
+  
   grid <- arrangeGrob(qqplot, boxplot,tableGrob(summary), histogram, freq_plot,
                       layout_matrix = layout)
   
