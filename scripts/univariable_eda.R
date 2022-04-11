@@ -45,7 +45,7 @@ features_character <-
 
 features_continuous <- 
   data %>%
-  dplyr::select(-where(is.character) | -where(is.factor), -Filter) %>% 
+  dplyr::select(-where(is.character) & -where(is.factor), -Filter) %>% 
   names() %>% 
   set_names()
 
