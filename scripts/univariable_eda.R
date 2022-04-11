@@ -78,11 +78,6 @@ corr_matrix <-
 
 # Chi square independence test --------------------------------------------
 
-#https://stackoverflow.com/questions/39592879/r-dpylr-select-if-with-multiple-conditions
-#https://stackoverflow.com/questions/62639111/map-dplyr-function-to-each-combination-of-variable-pairs-in-an-r-dataframe
-
-
-
 chisquare_function <- function(x) {
   data %>% 
     select_if(is.factor) %>% 
