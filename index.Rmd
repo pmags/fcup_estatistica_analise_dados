@@ -1,8 +1,8 @@
 --- 
-title: "Titel"
-subtitle: "Subtitle"
-author: "name"
-date: "date"
+title: "Estatística e Análise de Dandos"
+subtitle: "Trabalho Prático"
+author: "Lirielly Nascimento e Pedro Magalhães"
+date: "18/04/2022"
 site: bookdown::bookdown_site
 geometry: margin=2.5cm
 documentclass: article
@@ -13,18 +13,48 @@ cover-image: theme/images/cover.pdf
 
 
 
-# Introduction 
+# Introdução 
 
-## Goals and objectives
+## Descrição dos Dados
 
-Text
- 
-## Assumptions
+O Complexo Bushveld, a maior intrusão máfico-ultramáfica em camadas do mundo, é anfitrião de numerosas camadas de cromitita, lateralmente contínuas e quimicamente semelhantes. Com base em sua posição estratigráfica as camadas são subdivididas em um grupo inferior, médio e superior (LG, MG e UG). Dentro desses grupos as camadas são numeradas sucessivamente – da base ao topo de cada grupo. 
 
-Text
 
-## Definitions
+Tentativas de discriminar entre camadas únicas com base em sua composição falharam - principalmente devido à sobreposição significativa de campos de composição, por exemplo, de agrupamentos minerais de cromitita e química mineral de cromita entre camadas (vizinhas).
 
-Text
+O conjunto de dados que utilizaremos foi fornecido pela Cronimet SA (Pty) Ltd., compreendendo em um grande banco de dados geoquímico (N = 1205) de cromitita de interseções de núcleo de perfuração e abrange 14 camadas de cromitita distintas (LG-1 – LG-7, MG-1 – MG-4, incluindo o LG-6A, MG-4A, MG-4Z) da Mina Thaba (que pode ser identificada na imagem abaixo), uma mina de cromita localizada no limbo ocidental do Complexo Bushveld. Os dados mostrados são restritos a cromitita maciça, excluindo paredões ou camadas suspensas de paredes, mas as análises podem conter intercalações de silicato finos (até alguns cm de espessura), separações de piroxenita, oikocristais de piroxênio, etc. Estes permanecem no conjunto de dados em ordem para representar toda a gama de possíveis composições de cromitita dentro da mina.
+
+Durante a exploração na Mina Thaba, a composição das camadas de cromitita é rotineiramente restrita por apenas seis óxidos de elementos principais (Cr2O3, FeO, Al2O3, MgO, SiO2, CaO) e P. Além disso, o banco de dados da empresa contém valores para concentrações de Au e PGE, incluindo Pt, Pd, Rh, Ru e Ir. O banco de dados foi previamente filtrado para quaisquer valores ausentes (como “não analisado” ou “abaixo do limite de detecção”) entre os principais óxidos do elemento e o PGE.
+
+![Imagem 1: Complexo Bushveld](./data/CB.png)
+
+Neste trabalho realizaremos algumas análises, dentre elas: análise de correlação, análise de componentes principais e análise do qui-quadrado. O nosso intuito com essas análises é verificar se conseguimos reduzir a dimensionalidade dos dados (variáveis numéricas) e obter um novo espaço de representação com uma boa representatividade das variáveis originais com as componentes criadas. Mais ainda, que as componentes selecionadas, as que explicam parte importante da dispersão, consigam mostrar a influência dos componentes geoquímicos nas amostras de cromitita.
+
+O dataset contendo os dados analisados neste trabalho pode ser acessado no seguinte [link](https://www.kaggle.com/saurabhshahane/multivariate-geochemical-classification).
+
+
+## Definição das variáveis
+
+|Variável|Descrição|Tipo da variável|
+|--------|-------------------------------------|----|
+|HoleType|Tipo do furo que foi coletada a amostra|Categórico|
+|MaxDepth|Profundidade máxima da coleta da amostra|Categórico|
+|DepthFrom|Profundidade inicial da coleta da amostra|Numérica|
+|DepthTo|Profundidade final da coleta da amostra|Numérica|
+|Cr2O3_%|Percentual de Óxido de Cromo presente na amostra|Numérica|
+|FeO_%|Percentual de Óxido de Ferro presente na amostra|Numérica|
+|SiO2_%|Percentual de Dióxido de Silício presente na amostra|Numérica|
+|MgO_%|Percentual de Óxido de Magnésio presente na amostra|Numérica|
+|Al2O3_%|Percentual de Óxido de Alumínio presente na amostra|Numérica|
+|CaO_%|Percentual de Óxido de Cálcio presente na amostra|Numérica|
+|P_%|Percentual de Fósforo presente na amostra|Numérica|
+|Au_ICP_ppm|Partes por milhão de ICP (Plasma Acoplado Indutivamente) de Ouro|Numérica|
+|Pt_ICP_ppm|Partes por milhão de ICP (Plasma Acoplado Indutivamente) de Platina|Numérica|
+|Pd_ICP_ppm|Partes por milhão de ICP (Plasma Acoplado Indutivamente) de Paládio|Numérica|
+|Rh_ICP_ppm|Partes por milhão de ICP (Plasma Acoplado Indutivamente) de Ródio|Numérica|
+|Ir_ICP_ppm|Partes por milhão de ICP (Plasma Acoplado Indutivamente) de Irídio|Numérica|
+|Ru_ICP_ppm|Partes por milhão de ICP (Plasma Acoplado Indutivamente) de Ruténio|Numérica|
+|Stratigraphy|Posição estratigráfica das camadas de cromitita dentro da Zona Crítica a partir da base para cima|Numérica|
+
 
 \newpage
