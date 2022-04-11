@@ -37,8 +37,8 @@ O dataset contendo os dados analisados neste trabalho pode ser acessado no segui
 
 |Variável|Descrição|Tipo da variável|
 |--------|-------------------------------------|----|
-|HoleType|Tipo do furo que foi coletada a amostra|Categórico|
-|MaxDepth|Profundidade máxima da coleta da amostra|Categórico|
+|HoleType|Tipo do furo que foi coletada a amostra|Categórica|
+|MaxDepth|Profundidade máxima da coleta da amostra|Categórica|
 |DepthFrom|Profundidade inicial da coleta da amostra|Numérica|
 |DepthTo|Profundidade final da coleta da amostra|Numérica|
 |Cr2O3_%|Percentual de Óxido de Cromo presente na amostra|Numérica|
@@ -54,7 +54,7 @@ O dataset contendo os dados analisados neste trabalho pode ser acessado no segui
 |Rh_ICP_ppm|Partes por milhão de ICP (Plasma Acoplado Indutivamente) de Ródio|Numérica|
 |Ir_ICP_ppm|Partes por milhão de ICP (Plasma Acoplado Indutivamente) de Irídio|Numérica|
 |Ru_ICP_ppm|Partes por milhão de ICP (Plasma Acoplado Indutivamente) de Ruténio|Numérica|
-|Stratigraphy|Posição estratigráfica das camadas de cromitita dentro da Zona Crítica a partir da base para cima|Numérica|
+|Stratigraphy|Posição estratigráfica das camadas de cromitita dentro da Zona Crítica a partir da base para cima|Categórica|
 
 
 \newpage
