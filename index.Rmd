@@ -44,7 +44,7 @@ https://www.kaggle.com/saurabhshahane/multivariate-geochemical-classification.
 
 
 |Variável|Descrição|Tipo da variável|
-|--------:|--------:|--------:|
+|--------:--------:|--------:|
 |HoleType|Tipo do furo que foi coletada a amostra|Categórica|
 |MaxDepth|Profundidade máxima da coleta da amostra|Categórica|
 |DepthFrom|Profundidade inicial da coleta da amostra|Numérica|

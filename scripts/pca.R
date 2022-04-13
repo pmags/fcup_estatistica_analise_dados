@@ -14,10 +14,27 @@
 library(tidyverse)
 library(FactoMineR)
 
+## Import dataset
 
-PCA_Bank <-PCA(Bank[,-c(12,13)])
-PCA_Bank$svd$V # Eigenvectors
-PCA_Bank$eig # Eigenvalues
-## plot of the eigenvalues:
-barplot(PCA_Bank$eig[,1],main="Eigenvalues",names.arg=1:nrow
-        (PCA_Bank$eig))
+data <- 
+  readr::read_delim("data/Complexo_Bushveld.csv", 
+                    delim = ";", 
+                    escape_double = FALSE, 
+                    trim_ws = TRUE)
+
+## Transforming MaxDepth in categorical
+data$MaxDepth <- cut(data$MaxDepth, breaks = c(-Inf,200, 400,Inf), right=FALSE, labels=c("Low", "Middle", "Depth"))
+#data$MaxDepth <- as.factor(data$MaxDepth)
+
+# Removing date column and converting character to factors
+
+data <- data %>% 
+  dplyr::mutate(
+    HoleType = as.factor(HoleType),
+    MaxDepth = as.factor(MaxDepth),
+    Motherhole = as.factor(Motherhole),
+    Stratigraphy = as.factor(Stratigraphy)
+  ) %>% 
+  dplyr::select(-Date)
+
+
