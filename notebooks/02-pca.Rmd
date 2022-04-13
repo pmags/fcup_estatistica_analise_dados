@@ -34,7 +34,7 @@ corr_matrix
 ```{r}
 
 
-pca <- PCA(data %>% select_if(is.numeric))
+pca <- PCA(data %>% select_if(is.numeric), ncp = 7)
 
 
 ```
@@ -56,6 +56,13 @@ barplot(pca$eig[,1],main="Eigenvalues",names.arg=1:nrow
 (pca$eig))
 
 ```
+
+```{r}
+
+round(pca$var$contrib, 3)
+
+```
+
 
 \newpage
 
