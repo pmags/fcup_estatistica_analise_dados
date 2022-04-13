@@ -1,0 +1,559 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[
+]{article}
+\usepackage{lmodern}
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math}
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\hypersetup{
+  pdftitle={Estatística e Análise de Dados},
+  pdfauthor={Lirielly Nascimento e Pedro Magalhães},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+\urlstyle{same} % disable monospaced font for URLs
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{longtable,booktabs}
+% Correct order of tables after \paragraph or \subparagraph
+\usepackage{etoolbox}
+\makeatletter
+\patchcmd\longtable{\par}{\if@noskipsec\mbox{}\fi\par}{}{}
+\makeatother
+% Allow footnotes in longtable head/foot
+\IfFileExists{footnotehyper.sty}{\usepackage{footnotehyper}}{\usepackage{footnote}}
+\makesavenoteenv{longtable}
+\usepackage{graphicx}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+% Set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{5}
+%----------------------------------------------------------------------------------------
+%	REQUIRED PACKAGES
+%
+% pdfpages:(http://mirrors.up.pt/pub/CTAN/macros/latex/contrib/pdfpages/pdfpages.pdf)
+% geometry: (https://www.overleaf.com/learn/latex/Page_size_and_margins)
+% fancyhdr: (https://www.overleaf.com/learn/latex/Headers_and_footers)
+% xcolor: (https://www.overleaf.com/learn/latex/Using_colours_in_LaTeX)
+% titlesec: https://www.overleaf.com/learn/latex/Sections_and_chapters
+%----------------------------------------------------------------------------------------
+
+\usepackage{pdfpages} %allows the introduction of pdf pages 
+\usepackage{fancyhdr} %changes headers and footers
+\usepackage{xcolor} %Lets set different colors for the document
+\usepackage{titlesec} %customizes chapters(book) and sections(article)
+\usepackage{tikz}
+\usepackage{fontspec} %customizes fonts
+\usepackage{graphicx} %add graphical elements
+\usepackage{background} %customizes documents backgrounds
+\usepackage{lastpage}
+\usepackage{caption} % allows image caption costumization
+\usepackage{blindtext}
+\usepackage[most]{tcolorbox}
+\tcbuselibrary{skins}
+\usepackage{multicol} % allows more than one column on text
+\usepackage{enumitem} % Allows to change lists %>% 
+\usepackage[default]{opensans}
+\usepackage{setspace}\setstretch{1.25}
+\usepackage{float}
+\floatplacement{figure}{H}
+%\usepackage{setspace}\singlespacing
+
+%----------------------------------------------------------------------------------------
+%	FONTS FORMAT
+%----------------------------------------------------------------------------------------
+
+\setmainfont[SizeFeatures={Size=10}]{Open Sans}
+
+%----------------------------------------------------------------------------------------
+%	DOCUMENT COLORS
+%----------------------------------------------------------------------------------------
+
+\definecolor{DarkPurple}{HTML}{680c62}
+\definecolor{MediumPurple}{HTML}{a8139d}
+\definecolor{LightPurple}{HTML}{c26cf0}
+\definecolor{Grey}{HTML}{bfbfbf}
+\definecolor{lightGreen}{HTML}{ddeedd}
+\definecolor{mediumGreen}{HTML}{77bb77}
+
+\definecolor{DarkGray}{HTML}{403D3C}
+\definecolor{AtomicGreen}{HTML}{10FF10}
+
+%----------------------------------------------------------------------------------------
+%	SECTION FORMAT
+%----------------------------------------------------------------------------------------
+
+\titleformat{\section}[block]
+  {\titlerule\addvspace{4pt}\normalfont\fontsize{12}{12}\bfseries}
+  {\thesection\enspace}{0pt}{}[\vspace{2pt}\titlerule]
+
+\titleformat*{\section}{\color{DarkGray}\fontsize{16}{16}\normalfont\bfseries}
+\titleformat*{\subsection}{\color{DarkGray}\fontsize{12}{12}\normalfont\bfseries}
+\titleformat*{\subsubsection}{\color{AtomicGreen}\fontsize{10}{10}\normalfont\bfseries}
+
+\titlespacing*{\section}{0pt}{30pt}{50pt}
+\titlespacing*{\subsection}{0pt}{40pt}{10pt}
+
+%----------------------------------------------------------------------------------------
+%	CUSTOM HEADER AND FOOTER
+%----------------------------------------------------------------------------------------
+
+\pagestyle{fancy}
+\fancyhf{} %clear all headers and footer fields
+%\fancyhead[RO,RE]{\textcolor{DarkGray}{math.marketing}}
+\fancyhead[LO,LE]{\textcolor{DarkGray}{\thepage}}
+\renewcommand{\headrulewidth}{0pt} %Eliminates header row that is part of the default
+
+
+\backgroundsetup{
+  scale=1.3,
+  opacity=1,
+  angle=0,
+  position=current page.south,
+  hshift=0pt, %-27
+  vshift=20pt,
+  contents={%
+  \small\sffamily%
+  \begin{minipage}{1\textwidth}
+  \includegraphics[scale=0.5]{theme/images/footer.png}
+  \end{minipage}%
+  }
+}
+
+%----------------------------------------------------------------------------------------
+%	CUSTOM IMAGE FORMATING
+%----------------------------------------------------------------------------------------
+
+\captionsetup[figure]{name=Fig.}
+
+%----------------------------------------------------------------------------------------
+%	COVER PAGE
+%----------------------------------------------------------------------------------------
+
+\AtBeginDocument{\let\maketitle\relax}
+
+%----------------------------------------------------------------------------------------
+%	NEW COMMANDS
+%-------------------------------------------------------------------------------------
+
+% http://texdoc.net/texmf-dist/doc/latex/tcolorbox/tcolorbox.pdf
+
+\newcommand{\impactBox}[2]{
+  \begin{tcolorbox}[width=\textwidth,
+  fonttitle = \sffamily\bfseries\large, 
+  colframe={mediumGreen},
+  colback={lightGreen},
+  title={#1},
+  sharp corners]  
+  \textsc{#2}
+  \end{tcolorbox} 
+}
+
+\newcommand{\attentionBox}[1]{
+  \begin{tcolorbox}[fonttitle = \sffamily\bfseries\large,
+  bicolor,
+  sidebyside,
+  lefthand width=0.5cm,
+  sharp corners,
+  boxrule=.4pt,
+  colback=yellow!30,
+  colbacklower=yellow!20]
+    \includegraphics[scale=5]{theme/images/attention-sign.png}
+  \tcblower
+    \textsc{#1}%
+  \end{tcolorbox}
+}
+\usepackage[]{natbib}
+\bibliographystyle{plainnat}
+
+\title{Estatística e Análise de Dados}
+\usepackage{etoolbox}
+\makeatletter
+\providecommand{\subtitle}[1]{% add subtitle to \maketitle
+  \apptocmd{\@title}{\par {\large #1 \par}}{}{}
+}
+\makeatother
+\subtitle{Trabalho Prático}
+\author{Lirielly Nascimento e Pedro Magalhães}
+\date{18/04/2022}
+
+\begin{document}
+\NoBgThispage %does not apply background
+\includepdf{theme/images/cover.pdf}
+\maketitle
+
+
+
+{
+\setcounter{tocdepth}{3}
+\tableofcontents
+}
+\newpage
+
+\hypertarget{introduuxe7uxe3o}{%
+\section*{Introdução}\label{introduuxe7uxe3o}}
+\addcontentsline{toc}{section}{Introdução}
+
+\hypertarget{descriuxe7uxe3o-dos-dados}{%
+\subsection*{Descrição dos Dados}\label{descriuxe7uxe3o-dos-dados}}
+\addcontentsline{toc}{subsection}{Descrição dos Dados}
+
+O Complexo Bushveld, a maior intrusão máfico-ultramáfica em camadas do mundo, é anfitrião de numerosas camadas de cromitita, lateralmente contínuas e quimicamente semelhantes. Com base em sua posição estratigráfica as camadas são subdivididas em um grupo inferior, médio e superior (LG, MG e UG). Dentro desses grupos as camadas são numeradas sucessivamente -- da base ao topo de cada grupo.
+
+Tentativas de discriminar entre camadas únicas com base em sua composição falharam - principalmente devido à sobreposição significativa de campos de composição, por exemplo, de agrupamentos minerais de cromitita e química mineral de cromita entre camadas (vizinhas).
+
+O conjunto de dados que utilizaremos foi fornecido pela Cronimet SA (Pty) Ltd., compreendendo em um grande banco de dados geoquímico (N = 1205) de cromitita de interseções de núcleo de perfuração e abrange 14 camadas de cromitita distintas (LG-1 -- LG-7, MG-1 -- MG-4, incluindo o LG-6A, MG-4A, MG-4Z) da Mina Thaba (que pode ser identificada na imagem abaixo), uma mina de cromita localizada no limbo ocidental do Complexo Bushveld. Os dados mostrados são restritos a cromitita maciça, excluindo paredões ou camadas suspensas de paredes, mas as análises podem conter intercalações de silicato finos (até alguns cm de espessura), separações de piroxenita, oikocristais de piroxênio, etc. Estes permanecem no conjunto de dados em ordem para representar toda a gama de possíveis composições de cromitita dentro da mina.
+
+Durante a exploração na Mina Thaba, a composição das camadas de cromitita é rotineiramente restrita por apenas seis óxidos de elementos principais (Cr2O3, FeO, Al2O3, MgO, SiO2, CaO) e P. Além disso, o banco de dados da empresa contém valores para concentrações de Au e PGE, incluindo Pt, Pd, Rh, Ru e Ir. O banco de dados foi previamente filtrado para quaisquer valores ausentes (como ``não analisado'' ou ``abaixo do limite de detecção'') entre os principais óxidos do elemento e o PGE.
+
+\includegraphics{./data/CB.png}
+
+Neste trabalho realizaremos algumas análises, dentre elas: análise de correlação, análise de componentes principais e análise do qui-quadrado. O nosso intuito com essas análises é verificar se conseguimos reduzir a dimensionalidade dos dados (variáveis numéricas) e obter um novo espaço de representação com uma boa representatividade das variáveis originais com as componentes criadas. Mais ainda, que as componentes selecionadas, as que explicam parte importante da dispersão, consigam mostrar a influência dos componentes geoquímicos nas amostras de cromitita.
+
+O dataset contendo os dados analisados neste trabalho pode ser acessado no seguinte
+
+\url{https://www.kaggle.com/saurabhshahane/multivariate-geochemical-classification}.
+
+\hypertarget{definiuxe7uxe3o-das-variuxe1veis}{%
+\subsection*{Definição das variáveis}\label{definiuxe7uxe3o-das-variuxe1veis}}
+\addcontentsline{toc}{subsection}{Definição das variáveis}
+
+\begin{longtable}[]{@{}
+  >{\raggedleft\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.3333}}
+  >{\raggedleft\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.3333}}
+  >{\raggedleft\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.3333}}@{}}
+\toprule
+\begin{minipage}[b]{\linewidth}\raggedleft
+Variável
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+Descrição
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+Tipo da variável
+\end{minipage} \\
+\midrule
+\endhead
+HoleType & Tipo do furo que foi coletada a amostra & Categórica \\
+MaxDepth & Profundidade máxima da coleta da amostra & Categórica \\
+DepthFrom & Profundidade inicial da coleta da amostra & Numérica \\
+DepthTo & Profundidade final da coleta da amostra & Numérica \\
+Cr2O3\_\% & Percentual de Óxido de Cromo presente na amostra & Numérica \\
+FeO\_\% & Percentual de Óxido de Ferro presente na amostra & Numérica \\
+SiO2\_\% & Percentual de Dióxido de Silício presente na amostra & Numérica \\
+MgO\_\% & Percentual de Óxido de Magnésio presente na amostra & Numérica \\
+Al2O3\_\% & Percentual de Óxido de Alumínio presente na amostra & Numérica \\
+CaO\_\% & Percentual de Óxido de Cálcio presente na amostra & Numérica \\
+P\_\% & Percentual de Fósforo presente na amostra & Numérica \\
+Au\_ICP\_ppm & Partes por milhão de ICP (Plasma Acoplado Indutivamente) de Ouro & Numérica \\
+Pt\_ICP\_ppm & Partes por milhão de ICP (Plasma Acoplado Indutivamente) de Platina & Numérica \\
+Pd\_ICP\_ppm & Partes por milhão de ICP (Plasma Acoplado Indutivamente) de Paládio & Numérica \\
+Rh\_ICP\_ppm & Partes por milhão de ICP (Plasma Acoplado Indutivamente) de Ródio & Numérica \\
+Ir\_ICP\_ppm & Partes por milhão de ICP (Plasma Acoplado Indutivamente) de Irídio & Numérica \\
+Ru\_ICP\_ppm & Partes por milhão de ICP (Plasma Acoplado Indutivamente) de Ruténio & Numérica \\
+Stratigraphy & Posição estratigráfica das camadas de cromitita dentro da Zona Crítica a partir da base para cima & Categórica \\
+\bottomrule
+\end{longtable}
+
+\newpage
+
+\hypertarget{data-exploration}{%
+\section{Data Exploration}\label{data-exploration}}
+
+\hypertarget{holetype}{%
+\subsection{HoleType}\label{holetype}}
+
+\begin{center}\includegraphics{_main_files/figure-latex/unnamed-chunk-5-1} \end{center}
+
+A variável \textbf{Holetype} que representa o tipo do buraco feito para coleta da amostra de cromitita em uma das sessõe da mina do complexo de Bushveld. A variável é categórica sendo que a maior prediminância da classe sendo o buraco feito por meio de um \textbf{poço artesiano} e a outra classe sendo o buraco feito por meio de \textbf{deflexão}.
+
+\hypertarget{maxdepth}{%
+\subsection{MaxDepth}\label{maxdepth}}
+
+\textbf{MaxDepth} é a profundidade máxima do buraco utilizado para coleta da amostra de cromitita para a análise química. A váriável é categórica sendo que as classes \textbf{``Low''} e \textbf{``Middle''} tem praticamente a mesma proporção e a classe \textbf{``Depth''} tem aproximadamente o dobro da proporção das outras duas.
+
+\hypertarget{depthfrom}{%
+\subsection{DepthFrom}\label{depthfrom}}
+
+\begin{center}\includegraphics{_main_files/figure-latex/unnamed-chunk-7-1} \end{center}
+
+\textbf{DepthFrom} é a profundidade inicial de onde a amostra de cromitita foi coletada para a análise química. A váriável é contínua com distribuição gamma. O box-plot indica a presença de outliers, mas no contexto da coleta de amostras de cromitita para análise quimica esses valores não se confirmam como outliers e sim como prováveis de acontecer. Observamos por meio da distribuição desta variável que temos alguns valores com grande magnitude e desta forma a mediana e os valores máximo e mínimo são boas medidas de tendência central.
+
+\hypertarget{depthto}{%
+\subsection{DepthTo}\label{depthto}}
+
+\begin{center}\includegraphics{_main_files/figure-latex/unnamed-chunk-8-1} \end{center}
+
+\textbf{DepthTo} é a profundidade final de onde a amostra de cromitita foi coletada para a análise química. A váriável é contínua com distribuição gamma. O box-plot indica a presença de outliers, mas no contexto da coleta de amostras de cromitita para análise quimica esses valores não se confirmam como outliers e sim como prováveis de acontecer. Observamos por meio da distribuição desta variável que temos alguns valores com grande magnitude e desta forma a mediana e os valores máximo e mínimo são boas medidas de tendência central.
+
+\hypertarget{cr2o3_}{%
+\subsection{Cr2O3\_\%}\label{cr2o3_}}
+
+\begin{center}\includegraphics{_main_files/figure-latex/unnamed-chunk-9-1} \end{center}
+
+\textbf{Cr2O3\_\%} representa o percentual de \textbf{óxido de cromo} contido na amostra de cromitita analisada. A váriável é contínua com distribuição bimodal, o box-plot sugere a presença de outliers. Por possuir alguns valores de grande amplitude a mediana e os valores máximo e mínimo são boas medidas de tendência central.
+
+\hypertarget{feo_}{%
+\subsection{FeO\_\%}\label{feo_}}
+
+\begin{center}\includegraphics{_main_files/figure-latex/unnamed-chunk-10-1} \end{center}
+
+\textbf{FeO\_\%} representa o percentual de \textbf{óxido de ferro} contido na amostra de cromitita analisada. A váriável é contínua com distribuição normal, o box-plot sugere a presença de outliers. Como a distribuição desta variável se assemelha a uma distribuição normal a média e o desvio padrão são boas medidas de tendência central.
+
+\hypertarget{sio2_}{%
+\subsection{SiO2\_\%}\label{sio2_}}
+
+\begin{center}\includegraphics{_main_files/figure-latex/unnamed-chunk-11-1} \end{center}
+
+\textbf{SiO2\_\%} representa o percentual de \textbf{dióxido de silício} contido na amostra de cromitita analisada. A váriável é contínua com distribuição bimodal, o box-plot sugere a presença de outliers. E, por possuir alguns valores de grande amplitude a mediana e os valores máximo e mínimo são boas medidas de tendência central.
+
+\hypertarget{mgo_}{%
+\subsection{MgO\_\%}\label{mgo_}}
+
+\begin{center}\includegraphics{_main_files/figure-latex/unnamed-chunk-12-1} \end{center}
+
+\textbf{MgO\_\%} representa o percentual de \textbf{óxido de magnésio} contido na amostra de cromitita analisada. A váriável é contínua com distribuição normal, o box-plot sugere a presença de outliers. Como a distribuição desta variável se assemelha a uma distribuição normal a média e o desvio padrão são boas medidas de tendência central.
+
+\hypertarget{al2o3_}{%
+\subsection{Al2O3\_\%}\label{al2o3_}}
+
+\begin{center}\includegraphics{_main_files/figure-latex/unnamed-chunk-13-1} \end{center}
+
+\textbf{Al2O3\_\%} representa o percentual de \textbf{óxido de alumínio} contido na amostra de cromitita analisada. A váriável é contínua com distribuição bimodal, o box-plot sugere a presença de outliers. E, por possuir alguns valores de grande amplitude a mediana e os valores máximo e mínimo são boas medidas de tendência central.
+
+\hypertarget{cao_}{%
+\subsection{CaO\_\%}\label{cao_}}
+
+\begin{center}\includegraphics{_main_files/figure-latex/unnamed-chunk-14-1} \end{center}
+
+\textbf{CaO\_\%} representa o percentual de \textbf{óxido de cálcio} contido na amostra de cromitita analisada. A váriável é contínua com distribuição bimodal, o box-plot sugere a presença de outliers. E, por possuir alguns valores de grande amplitude a mediana e os valores máximo e mínimo são boas medidas de tendência central.
+
+\hypertarget{p_}{%
+\subsection{P\_\%}\label{p_}}
+
+\begin{center}\includegraphics{_main_files/figure-latex/unnamed-chunk-15-1} \end{center}
+
+\textbf{P\_\%} representa o percentual de \textbf{fósfoto} contido na amostra de cromitita analisada. A váriável é contínua com distribuição similar a uma gamma ou poisson, o box-plot sugere a presença de outliers. E, por possuir alguns valores de grande amplitude a mediana e os valores máximo e mínimo são boas medidas de tendência central.
+
+\hypertarget{au_icp_ppm}{%
+\subsection{Au\_ICP\_ppm}\label{au_icp_ppm}}
+
+\begin{center}\includegraphics{_main_files/figure-latex/unnamed-chunk-16-1} \end{center}
+
+\textbf{Au\_ICP\_ppm} representa as partes por milhão de ICP (Plasma Acoplado Indutivamente) de \textbf{ouro} contido na amostra de cromitita analisada. A váriável é contínua com distribuição similar a uma gamma ou poisson, o box-plot sugere a presença de outliers. E, por possuir alguns valores de grande amplitude a mediana e os valores máximo e mínimo são boas medidas de tendência central.
+
+\hypertarget{pt_icp_ppm}{%
+\subsection{Pt\_ICP\_ppm}\label{pt_icp_ppm}}
+
+\begin{center}\includegraphics{_main_files/figure-latex/unnamed-chunk-17-1} \end{center}
+
+\textbf{Pt\_ICP\_ppm} representa as partes por milhão de ICP (Plasma Acoplado Indutivamente) de \textbf{platina} contido na amostra de cromitita analisada. A váriável é contínua com distribuição bimodal, o box-plot sugere a presença de outliers. E, por possuir alguns valores de grande amplitude a mediana e os valores máximo e mínimo são boas medidas de tendência central.
+
+\hypertarget{pd_icp_ppm}{%
+\subsection{Pd\_ICP\_ppm}\label{pd_icp_ppm}}
+
+\begin{center}\includegraphics{_main_files/figure-latex/unnamed-chunk-18-1} \end{center}
+
+\textbf{Pd\_ICP\_ppm} representa as partes por milhão de ICP (Plasma Acoplado Indutivamente) de \textbf{paládio} contido na amostra de cromitita analisada. A váriável é contínua com distribuição gamma, o box-plot sugere a presença de outliers. E, por possuir alguns valores de grande amplitude a mediana e os valores máximo e mínimo são boas medidas de tendência central.
+
+\hypertarget{rh_icp_ppm}{%
+\subsection{Rh\_ICP\_ppm}\label{rh_icp_ppm}}
+
+\begin{center}\includegraphics{_main_files/figure-latex/unnamed-chunk-19-1} \end{center}
+
+\textbf{Rh\_ICP\_ppm} representa as partes por milhão de ICP (Plasma Acoplado Indutivamente) de \textbf{ródio} contido na amostra de cromitita analisada. A váriável é contínua com distribuição gamma, o box-plot sugere a presença de outliers. E, por possuir alguns valores de grande amplitude a mediana e os valores máximo e mínimo são boas medidas de tendência central.
+
+\hypertarget{ir_icp_ppm}{%
+\subsection{Ir\_ICP\_ppm}\label{ir_icp_ppm}}
+
+\begin{center}\includegraphics{_main_files/figure-latex/unnamed-chunk-20-1} \end{center}
+
+\textbf{Ir\_ICP\_ppm} representa as partes por milhão de ICP (Plasma Acoplado Indutivamente) de \textbf{irídio} contido na amostra de cromitita analisada. A váriável é contínua com distribuição bimodal, o box-plot sugere a presença de outliers. E, por possuir alguns valores de grande amplitude a mediana e os valores máximo e mínimo são boas medidas de tendência central.
+
+\hypertarget{ru_icp_ppm}{%
+\subsection{Ru\_ICP\_ppm}\label{ru_icp_ppm}}
+
+\begin{center}\includegraphics{_main_files/figure-latex/unnamed-chunk-21-1} \end{center}
+
+\textbf{Ru\_ICP\_ppm} representa as partes por milhão de ICP (Plasma Acoplado Indutivamente) de \textbf{ruténio} contido na amostra de cromitita analisada. A váriável é contínua com distribuição gamma, o box-plot sugere a presença de outliers. E, por possuir alguns valores de grande amplitude a mediana e os valores máximo e mínimo são boas medidas de tendência central.
+
+\textbf{Observação:} para todas as variáveis que representam as análises químicas tanto o percentual quanto as partes por milhão de ICP (Plasma Acoplado Indutivamente) vimos que o box-plot sugere a presença de outliers, porem esses valores atípicos podem desafiar um esquema de discriminação, mas parecem ser bastante comuns no Complexo Bushveld e são comumente atribuídos a heterogeneidades locais nos cromititos, por exemplo, a presença de grandes oikocristais de piroxênio ou uma concentração elevada de plagioclásio. E, por se tratar de fenômenos que podem ocorrer, nós não iremos eliminar os outlies dessas variáveis.
+
+\hypertarget{stratigraphy}{%
+\subsection{Stratigraphy}\label{stratigraphy}}
+
+\begin{center}\includegraphics{_main_files/figure-latex/unnamed-chunk-22-1} \end{center}
+
+\textbf{Stratigraphy} representa a posição estratigráfica das camadas de cromitita dentro da \textbf{Zona Crítica} a partir da base para cima. A váriável é categorica multiclasse. Através do gráfico de frequência observamos que existem 6 zonas críticas pouco frequentes, 4 zonas críticas com frequência média e 4 zonas críticas de alta frequência.
+
+\hypertarget{martriz-de-correlauxe7uxe3o}{%
+\subsection{Martriz de Correlação}\label{martriz-de-correlauxe7uxe3o}}
+
+\begin{center}\includegraphics{_main_files/figure-latex/unnamed-chunk-23-1} \end{center}
+
+\textbf{Não esquecer limpar na}
+
+\newpage
+
+\hypertarget{anuxe1lise-componentes-principais}{%
+\section{Análise Componentes Principais}\label{anuxe1lise-componentes-principais}}
+
+\begin{verbatim}
+## [[1]]
+## 
+##  Pearson's Chi-squared test
+## 
+## data:  x1 and x2
+## X-squared = 255.03, df = 217, p-value = 0.03917
+## 
+## 
+## [[2]]
+## 
+##  Pearson's Chi-squared test
+## 
+## data:  x1 and x2
+## X-squared = 2073.9, df = 434, p-value < 2.2e-16
+## 
+## 
+## [[3]]
+## 
+##  Pearson's Chi-squared test
+## 
+## data:  x1 and x2
+## X-squared = 4415, df = 2821, p-value < 2.2e-16
+## 
+## 
+## [[4]]
+## 
+##  Pearson's Chi-squared test
+## 
+## data:  x1 and x2
+## X-squared = 35.515, df = 2, p-value = 1.941e-08
+## 
+## 
+## [[5]]
+## 
+##  Pearson's Chi-squared test
+## 
+## data:  x1 and x2
+## X-squared = 416.4, df = 13, p-value < 2.2e-16
+## 
+## 
+## [[6]]
+## 
+##  Pearson's Chi-squared test
+## 
+## data:  x1 and x2
+## X-squared = 134.22, df = 26, p-value < 2.2e-16
+\end{verbatim}
+
+\begin{verbatim}
+##               DepthFrom      DepthTo      Cr2O3_%        FeO_%        SiO2_%
+## DepthFrom   1.000000000  0.999994019  0.451712158  0.039703204 -0.2894782647
+## DepthTo     0.999994019  1.000000000  0.452291719  0.039800235 -0.2899718816
+## Cr2O3_%     0.451712158  0.452291719  1.000000000  0.334639525 -0.8637909341
+## FeO_%       0.039703204  0.039800235  0.334639525  1.000000000 -0.6418266457
+## SiO2_%     -0.289478265 -0.289971882 -0.863790934 -0.641826646  1.0000000000
+## MgO_%       0.129626971  0.129227454 -0.204091402 -0.393778732  0.3861255234
+## Al2O3_%    -0.171031304 -0.171151170 -0.094841019 -0.088585884 -0.0093390724
+## CaO_%      -0.430625161 -0.430799384 -0.683607036 -0.308350464  0.4944524762
+## P_%        -0.001596324 -0.001436069 -0.076385429  0.133887321  0.0077634549
+## Au_ICP_ppm  0.025986711  0.026023343 -0.001142228  0.021652714 -0.0000203814
+## Pt_ICP_ppm -0.234298706 -0.235033605 -0.326959910  0.049279833  0.1726187604
+## Pd_ICP_ppm -0.149628483 -0.149809966 -0.209248127  0.003084335  0.1310322746
+## Rh_ICP_ppm -0.182501170 -0.182755097 -0.242124342  0.040846878  0.1211809968
+## Ir_ICP_ppm -0.198159204 -0.198854861 -0.174257867  0.030872088  0.0357104911
+## Ru_ICP_ppm  0.017872443  0.017935966  0.214038772  0.124826883 -0.2568236526
+## Filter     -0.095956158 -0.095593555  0.053555855  0.109805413 -0.1057924714
+##                   MgO_%      Al2O3_%       CaO_%           P_%    Au_ICP_ppm
+## DepthFrom   0.129626971 -0.171031304 -0.43062516 -0.0015963243  0.0259867113
+## DepthTo     0.129227454 -0.171151170 -0.43079938 -0.0014360693  0.0260233431
+## Cr2O3_%    -0.204091402 -0.094841019 -0.68360704 -0.0763854294 -0.0011422283
+## FeO_%      -0.393778732 -0.088585884 -0.30835046  0.1338873212  0.0216527138
+## SiO2_%      0.386125523 -0.009339072  0.49445248  0.0077634549 -0.0000203814
+## MgO_%       1.000000000 -0.379336499 -0.13009368 -0.0263767649 -0.0141334681
+## Al2O3_%    -0.379336499  1.000000000  0.01571338 -0.1168533729 -0.0460675452
+## CaO_%      -0.130093683  0.015713379  1.00000000  0.0844068361  0.0180669317
+## P_%        -0.026376765 -0.116853373  0.08440684  1.0000000000 -0.0039274993
+## Au_ICP_ppm -0.014133468 -0.046067545  0.01806693 -0.0039274993  1.0000000000
+## Pt_ICP_ppm -0.110933645  0.236219576  0.18308106 -0.0231281034  0.0142836534
+## Pd_ICP_ppm  0.001994966  0.089262792  0.15466499 -0.0276645271  0.2054777756
+## Rh_ICP_ppm -0.057841706  0.253619168  0.12309311 -0.0377101338  0.0112080796
+## Ir_ICP_ppm -0.117494227  0.436095278  0.08218942 -0.0536456353  0.0034252376
+## Ru_ICP_ppm -0.100728068  0.224353250 -0.17819082 -0.0571320114 -0.0175864802
+## Filter     -0.344671104  0.203839307  0.02924559 -0.0009267126  0.0169292740
+##             Pt_ICP_ppm   Pd_ICP_ppm  Rh_ICP_ppm   Ir_ICP_ppm  Ru_ICP_ppm
+## DepthFrom  -0.23429871 -0.149628483 -0.18250117 -0.198159204  0.01787244
+## DepthTo    -0.23503360 -0.149809966 -0.18275510 -0.198854861  0.01793597
+## Cr2O3_%    -0.32695991 -0.209248127 -0.24212434 -0.174257867  0.21403877
+## FeO_%       0.04927983  0.003084335  0.04084688  0.030872088  0.12482688
+## SiO2_%      0.17261876  0.131032275  0.12118100  0.035710491 -0.25682365
+## MgO_%      -0.11093364  0.001994966 -0.05784171 -0.117494227 -0.10072807
+## Al2O3_%     0.23621958  0.089262792  0.25361917  0.436095278  0.22435325
+## CaO_%       0.18308106  0.154664988  0.12309311  0.082189424 -0.17819082
+## P_%        -0.02312810 -0.027664527 -0.03771013 -0.053645635 -0.05713201
+## Au_ICP_ppm  0.01428365  0.205477776  0.01120808  0.003425238 -0.01758648
+## Pt_ICP_ppm  1.00000000  0.385254681  0.60128014  0.627918383  0.23581635
+## Pd_ICP_ppm  0.38525468  1.000000000  0.64085041  0.343478637  0.19440451
+## Rh_ICP_ppm  0.60128014  0.640850415  1.00000000  0.686160903  0.48650874
+## Ir_ICP_ppm  0.62791838  0.343478637  0.68616090  1.000000000  0.73268271
+## Ru_ICP_ppm  0.23581635  0.194404514  0.48650874  0.732682711  1.00000000
+## Filter      0.04992856  0.011070206  0.04988640  0.079335991  0.10139415
+##                   Filter
+## DepthFrom  -0.0959561582
+## DepthTo    -0.0955935549
+## Cr2O3_%     0.0535558551
+## FeO_%       0.1098054128
+## SiO2_%     -0.1057924714
+## MgO_%      -0.3446711045
+## Al2O3_%     0.2038393065
+## CaO_%       0.0292455898
+## P_%        -0.0009267126
+## Au_ICP_ppm  0.0169292740
+## Pt_ICP_ppm  0.0499285563
+## Pd_ICP_ppm  0.0110702061
+## Rh_ICP_ppm  0.0498863978
+## Ir_ICP_ppm  0.0793359913
+## Ru_ICP_ppm  0.1013941519
+## Filter      1.0000000000
+\end{verbatim}
+
+\end{document}

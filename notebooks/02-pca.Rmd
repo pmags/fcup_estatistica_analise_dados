@@ -1,0 +1,37 @@
+---
+editor_options:
+  chunk_output_type: console
+---
+
+
+```{r  echo=FALSE, message=FALSE, warning=FALSE, cache=FALSE}
+
+#source("scripts/eda.R", local = TRUE, encoding = "UTF-8")
+source("./scripts/univariable_eda.R", local = TRUE, encoding = "UTF-8")
+
+knitr::opts_chunk$set(fig.align="center", echo=FALSE, fig.show = "hold")
+
+```
+
+
+# Análise Componentes Principais
+
+```{r}
+
+chi_test_factors
+
+```
+
+```{r}
+
+corr_matrix
+
+```
+
+
+```{r}
+
+
+
+```
+
