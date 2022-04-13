@@ -36,8 +36,8 @@
 \IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
 \IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
 \hypersetup{
-  pdftitle={Titel},
-  pdfauthor={name},
+  pdftitle={Estatística e Análise de Dados},
+  pdfauthor={Lirielly Nascimento e Pedro Magalhães},
   hidelinks,
   pdfcreator={LaTeX via pandoc}}
 \urlstyle{same} % disable monospaced font for URLs
@@ -193,16 +193,16 @@
 \usepackage[]{natbib}
 \bibliographystyle{plainnat}
 
-\title{Titel}
+\title{Estatística e Análise de Dados}
 \usepackage{etoolbox}
 \makeatletter
 \providecommand{\subtitle}[1]{% add subtitle to \maketitle
   \apptocmd{\@title}{\par {\large #1 \par}}{}{}
 }
 \makeatother
-\subtitle{Subtitle}
-\author{name}
-\date{date}
+\subtitle{Trabalho Prático}
+\author{Lirielly Nascimento e Pedro Magalhães}
+\date{18/04/2022}
 
 \begin{document}
 \NoBgThispage %does not apply background
@@ -215,25 +215,56 @@
 \setcounter{tocdepth}{3}
 \tableofcontents
 }
-\hypertarget{introduction}{%
-\section{Introduction}\label{introduction}}
-
-\hypertarget{goals-and-objectives}{%
-\subsection{Goals and objectives}\label{goals-and-objectives}}
-
-Text
-
-\hypertarget{assumptions}{%
-\subsection{Assumptions}\label{assumptions}}
-
-Text
-
-\hypertarget{definitions}{%
-\subsection{Definitions}\label{definitions}}
-
-Text
-
 \newpage
+
+\hypertarget{introduuxe7uxe3o}{%
+\section*{Introdução}\label{introduuxe7uxe3o}}
+\addcontentsline{toc}{section}{Introdução}
+
+\hypertarget{descriuxe7uxe3o-dos-dados}{%
+\subsection*{Descrição dos Dados}\label{descriuxe7uxe3o-dos-dados}}
+\addcontentsline{toc}{subsection}{Descrição dos Dados}
+
+O Complexo Bushveld, a maior intrusão máfico-ultramáfica em camadas do mundo, é anfitrião de numerosas camadas de cromitita, lateralmente contínuas e quimicamente semelhantes. Com base em sua posição estratigráfica as camadas são subdivididas em um grupo inferior, médio e superior (LG, MG e UG). Dentro desses grupos as camadas são numeradas sucessivamente -- da base ao topo de cada grupo.
+
+Tentativas de discriminar entre camadas únicas com base em sua composição falharam - principalmente devido à sobreposição significativa de campos de composição, por exemplo, de agrupamentos minerais de cromitita e química mineral de cromita entre camadas (vizinhas).
+
+O conjunto de dados que utilizaremos foi fornecido pela Cronimet SA (Pty) Ltd., compreendendo em um grande banco de dados geoquímico (N = 1205) de cromitita de interseções de núcleo de perfuração e abrange 14 camadas de cromitita distintas (LG-1 -- LG-7, MG-1 -- MG-4, incluindo o LG-6A, MG-4A, MG-4Z) da Mina Thaba (que pode ser identificada na imagem abaixo), uma mina de cromita localizada no limbo ocidental do Complexo Bushveld. Os dados mostrados são restritos a cromitita maciça, excluindo paredões ou camadas suspensas de paredes, mas as análises podem conter intercalações de silicato finos (até alguns cm de espessura), separações de piroxenita, oikocristais de piroxênio, etc. Estes permanecem no conjunto de dados em ordem para representar toda a gama de possíveis composições de cromitita dentro da mina.
+
+Durante a exploração na Mina Thaba, a composição das camadas de cromitita é rotineiramente restrita por apenas seis óxidos de elementos principais (Cr2O3, FeO, Al2O3, MgO, SiO2, CaO) e P. Além disso, o banco de dados da empresa contém valores para concentrações de Au e PGE, incluindo Pt, Pd, Rh, Ru e Ir. O banco de dados foi previamente filtrado para quaisquer valores ausentes (como ``não analisado'' ou ``abaixo do limite de detecção'') entre os principais óxidos do elemento e o PGE.
+
+\begin{center}\includegraphics{./data/CB} \end{center}
+
+Neste trabalho realizaremos algumas análises, dentre elas: análise de correlação, análise de componentes principais e análise do qui-quadrado. O nosso intuito com essas análises é verificar se conseguimos reduzir a dimensionalidade dos dados (variáveis numéricas) e obter um novo espaço de representação com uma boa representatividade das variáveis originais com as componentes criadas. Mais ainda, que as componentes selecionadas, as que explicam parte importante da dispersão, consigam mostrar a influência dos componentes geoquímicos nas amostras de cromitita.
+
+O dataset contendo os dados analisados neste trabalho pode ser acessado no seguinte
+
+\url{https://www.kaggle.com/saurabhshahane/multivariate-geochemical-classification}.
+
+\hypertarget{definiuxe7uxe3o-das-variuxe1veis}{%
+\subsection*{Definição das variáveis}\label{definiuxe7uxe3o-das-variuxe1veis}}
+\addcontentsline{toc}{subsection}{Definição das variáveis}
+
+\textbar Variável\textbar Descrição\textbar Tipo da variável\textbar{}
+\textbar--------:--------:\textbar--------:\textbar{}
+\textbar HoleType\textbar Tipo do furo que foi coletada a amostra\textbar Categórica\textbar{}
+\textbar MaxDepth\textbar Profundidade máxima da coleta da amostra\textbar Categórica\textbar{}
+\textbar DepthFrom\textbar Profundidade inicial da coleta da amostra\textbar Numérica\textbar{}
+\textbar DepthTo\textbar Profundidade final da coleta da amostra\textbar Numérica\textbar{}
+\textbar Cr2O3\_\%\textbar Percentual de Óxido de Cromo presente na amostra\textbar Numérica\textbar{}
+\textbar FeO\_\%\textbar Percentual de Óxido de Ferro presente na amostra\textbar Numérica\textbar{}
+\textbar SiO2\_\%\textbar Percentual de Dióxido de Silício presente na amostra\textbar Numérica\textbar{}
+\textbar MgO\_\%\textbar Percentual de Óxido de Magnésio presente na amostra\textbar Numérica\textbar{}
+\textbar Al2O3\_\%\textbar Percentual de Óxido de Alumínio presente na amostra\textbar Numérica\textbar{}
+\textbar CaO\_\%\textbar Percentual de Óxido de Cálcio presente na amostra\textbar Numérica\textbar{}
+\textbar P\_\%\textbar Percentual de Fósforo presente na amostra\textbar Numérica\textbar{}
+\textbar Au\_ICP\_ppm\textbar Partes por milhão de ICP (Plasma Acoplado Indutivamente) de Ouro\textbar Numérica\textbar{}
+\textbar Pt\_ICP\_ppm\textbar Partes por milhão de ICP (Plasma Acoplado Indutivamente) de Platina\textbar Numérica\textbar{}
+\textbar Pd\_ICP\_ppm\textbar Partes por milhão de ICP (Plasma Acoplado Indutivamente) de Paládio\textbar Numérica\textbar{}
+\textbar Rh\_ICP\_ppm\textbar Partes por milhão de ICP (Plasma Acoplado Indutivamente) de Ródio\textbar Numérica\textbar{}
+\textbar Ir\_ICP\_ppm\textbar Partes por milhão de ICP (Plasma Acoplado Indutivamente) de Irídio\textbar Numérica\textbar{}
+\textbar Ru\_ICP\_ppm\textbar Partes por milhão de ICP (Plasma Acoplado Indutivamente) de Ruténio\textbar Numérica\textbar{}
+\textbar Stratigraphy\textbar Posição estratigráfica das camadas de cromitita dentro da Zona Crítica a partir da base para cima\textbar Categórica\textbar{}
 
 \newpage
 
@@ -243,119 +274,117 @@ Text
 \hypertarget{holetype}{%
 \subsection{HoleType}\label{holetype}}
 
-\begin{center}\includegraphics{_main_files/figure-latex/unnamed-chunk-4-1} \end{center}
+\begin{center}\includegraphics{_main_files/figure-latex/unnamed-chunk-5-1} \end{center}
 
 A variável \textbf{Holetype} que representa o tipo do buraco feito para coleta da amostra de cromitita em uma das sessõe da mina do complexo de Bushveld. A variável é categórica sendo que a maior prediminância da classe sendo o buraco feito por meio de um \textbf{poço artesiano} e a outra classe sendo o buraco feito por meio de \textbf{deflexão}.
 
 \hypertarget{maxdepth}{%
 \subsection{MaxDepth}\label{maxdepth}}
 
-\begin{center}\includegraphics{_main_files/figure-latex/unnamed-chunk-5-1} \end{center}
-
-\textbf{MaxDepth} é a profundidade máxima do buraco utilizado para coleta da amostra de cromitita para a análise química. A váriável é contínua com distribuição multimodal, vemos também que o box-plot não apresenta presença de outliers e aparentemente a média e o desvio padrão são boas medidas de tendência central.
+\textbf{MaxDepth} é a profundidade máxima do buraco utilizado para coleta da amostra de cromitita para a análise química. A váriável é categórica sendo que as classes \textbf{``Low''} e \textbf{``Middle''} tem praticamente a mesma proporção e a classe \textbf{``Depth''} tem aproximadamente o dobro da proporção das outras duas.
 
 \hypertarget{depthfrom}{%
 \subsection{DepthFrom}\label{depthfrom}}
 
-\begin{center}\includegraphics{_main_files/figure-latex/unnamed-chunk-6-1} \end{center}
+\begin{center}\includegraphics{_main_files/figure-latex/unnamed-chunk-7-1} \end{center}
 
 \textbf{DepthFrom} é a profundidade inicial de onde a amostra de cromitita foi coletada para a análise química. A váriável é contínua com distribuição gamma. O box-plot indica a presença de outliers, mas no contexto da coleta de amostras de cromitita para análise quimica esses valores não se confirmam como outliers e sim como prováveis de acontecer. Observamos por meio da distribuição desta variável que temos alguns valores com grande magnitude e desta forma a mediana e os valores máximo e mínimo são boas medidas de tendência central.
 
 \hypertarget{depthto}{%
 \subsection{DepthTo}\label{depthto}}
 
-\begin{center}\includegraphics{_main_files/figure-latex/unnamed-chunk-7-1} \end{center}
+\begin{center}\includegraphics{_main_files/figure-latex/unnamed-chunk-8-1} \end{center}
 
 \textbf{DepthTo} é a profundidade final de onde a amostra de cromitita foi coletada para a análise química. A váriável é contínua com distribuição gamma. O box-plot indica a presença de outliers, mas no contexto da coleta de amostras de cromitita para análise quimica esses valores não se confirmam como outliers e sim como prováveis de acontecer. Observamos por meio da distribuição desta variável que temos alguns valores com grande magnitude e desta forma a mediana e os valores máximo e mínimo são boas medidas de tendência central.
 
 \hypertarget{cr2o3_}{%
 \subsection{Cr2O3\_\%}\label{cr2o3_}}
 
-\begin{center}\includegraphics{_main_files/figure-latex/unnamed-chunk-8-1} \end{center}
+\begin{center}\includegraphics{_main_files/figure-latex/unnamed-chunk-9-1} \end{center}
 
 \textbf{Cr2O3\_\%} representa o percentual de \textbf{óxido de cromo} contido na amostra de cromitita analisada. A váriável é contínua com distribuição bimodal, o box-plot sugere a presença de outliers. Por possuir alguns valores de grande amplitude a mediana e os valores máximo e mínimo são boas medidas de tendência central.
 
 \hypertarget{feo_}{%
 \subsection{FeO\_\%}\label{feo_}}
 
-\begin{center}\includegraphics{_main_files/figure-latex/unnamed-chunk-9-1} \end{center}
+\begin{center}\includegraphics{_main_files/figure-latex/unnamed-chunk-10-1} \end{center}
 
 \textbf{FeO\_\%} representa o percentual de \textbf{óxido de ferro} contido na amostra de cromitita analisada. A váriável é contínua com distribuição normal, o box-plot sugere a presença de outliers. Como a distribuição desta variável se assemelha a uma distribuição normal a média e o desvio padrão são boas medidas de tendência central.
 
 \hypertarget{sio2_}{%
 \subsection{SiO2\_\%}\label{sio2_}}
 
-\begin{center}\includegraphics{_main_files/figure-latex/unnamed-chunk-10-1} \end{center}
+\begin{center}\includegraphics{_main_files/figure-latex/unnamed-chunk-11-1} \end{center}
 
 \textbf{SiO2\_\%} representa o percentual de \textbf{dióxido de silício} contido na amostra de cromitita analisada. A váriável é contínua com distribuição bimodal, o box-plot sugere a presença de outliers. E, por possuir alguns valores de grande amplitude a mediana e os valores máximo e mínimo são boas medidas de tendência central.
 
 \hypertarget{mgo_}{%
 \subsection{MgO\_\%}\label{mgo_}}
 
-\begin{center}\includegraphics{_main_files/figure-latex/unnamed-chunk-11-1} \end{center}
+\begin{center}\includegraphics{_main_files/figure-latex/unnamed-chunk-12-1} \end{center}
 
 \textbf{MgO\_\%} representa o percentual de \textbf{óxido de magnésio} contido na amostra de cromitita analisada. A váriável é contínua com distribuição normal, o box-plot sugere a presença de outliers. Como a distribuição desta variável se assemelha a uma distribuição normal a média e o desvio padrão são boas medidas de tendência central.
 
 \hypertarget{al2o3_}{%
 \subsection{Al2O3\_\%}\label{al2o3_}}
 
-\begin{center}\includegraphics{_main_files/figure-latex/unnamed-chunk-12-1} \end{center}
+\begin{center}\includegraphics{_main_files/figure-latex/unnamed-chunk-13-1} \end{center}
 
 \textbf{Al2O3\_\%} representa o percentual de \textbf{óxido de alumínio} contido na amostra de cromitita analisada. A váriável é contínua com distribuição bimodal, o box-plot sugere a presença de outliers. E, por possuir alguns valores de grande amplitude a mediana e os valores máximo e mínimo são boas medidas de tendência central.
 
 \hypertarget{cao_}{%
 \subsection{CaO\_\%}\label{cao_}}
 
-\begin{center}\includegraphics{_main_files/figure-latex/unnamed-chunk-13-1} \end{center}
+\begin{center}\includegraphics{_main_files/figure-latex/unnamed-chunk-14-1} \end{center}
 
 \textbf{CaO\_\%} representa o percentual de \textbf{óxido de cálcio} contido na amostra de cromitita analisada. A váriável é contínua com distribuição bimodal, o box-plot sugere a presença de outliers. E, por possuir alguns valores de grande amplitude a mediana e os valores máximo e mínimo são boas medidas de tendência central.
 
 \hypertarget{p_}{%
 \subsection{P\_\%}\label{p_}}
 
-\begin{center}\includegraphics{_main_files/figure-latex/unnamed-chunk-14-1} \end{center}
+\begin{center}\includegraphics{_main_files/figure-latex/unnamed-chunk-15-1} \end{center}
 
 \textbf{P\_\%} representa o percentual de \textbf{fósfoto} contido na amostra de cromitita analisada. A váriável é contínua com distribuição similar a uma gamma ou poisson, o box-plot sugere a presença de outliers. E, por possuir alguns valores de grande amplitude a mediana e os valores máximo e mínimo são boas medidas de tendência central.
 
 \hypertarget{au_icp_ppm}{%
 \subsection{Au\_ICP\_ppm}\label{au_icp_ppm}}
 
-\begin{center}\includegraphics{_main_files/figure-latex/unnamed-chunk-15-1} \end{center}
+\begin{center}\includegraphics{_main_files/figure-latex/unnamed-chunk-16-1} \end{center}
 
 \textbf{Au\_ICP\_ppm} representa as partes por milhão de ICP (Plasma Acoplado Indutivamente) de \textbf{ouro} contido na amostra de cromitita analisada. A váriável é contínua com distribuição similar a uma gamma ou poisson, o box-plot sugere a presença de outliers. E, por possuir alguns valores de grande amplitude a mediana e os valores máximo e mínimo são boas medidas de tendência central.
 
 \hypertarget{pt_icp_ppm}{%
 \subsection{Pt\_ICP\_ppm}\label{pt_icp_ppm}}
 
-\begin{center}\includegraphics{_main_files/figure-latex/unnamed-chunk-16-1} \end{center}
+\begin{center}\includegraphics{_main_files/figure-latex/unnamed-chunk-17-1} \end{center}
 
 \textbf{Pt\_ICP\_ppm} representa as partes por milhão de ICP (Plasma Acoplado Indutivamente) de \textbf{platina} contido na amostra de cromitita analisada. A váriável é contínua com distribuição bimodal, o box-plot sugere a presença de outliers. E, por possuir alguns valores de grande amplitude a mediana e os valores máximo e mínimo são boas medidas de tendência central.
 
 \hypertarget{pd_icp_ppm}{%
 \subsection{Pd\_ICP\_ppm}\label{pd_icp_ppm}}
 
-\begin{center}\includegraphics{_main_files/figure-latex/unnamed-chunk-17-1} \end{center}
+\begin{center}\includegraphics{_main_files/figure-latex/unnamed-chunk-18-1} \end{center}
 
 \textbf{Pd\_ICP\_ppm} representa as partes por milhão de ICP (Plasma Acoplado Indutivamente) de \textbf{paládio} contido na amostra de cromitita analisada. A váriável é contínua com distribuição gamma, o box-plot sugere a presença de outliers. E, por possuir alguns valores de grande amplitude a mediana e os valores máximo e mínimo são boas medidas de tendência central.
 
 \hypertarget{rh_icp_ppm}{%
 \subsection{Rh\_ICP\_ppm}\label{rh_icp_ppm}}
 
-\begin{center}\includegraphics{_main_files/figure-latex/unnamed-chunk-18-1} \end{center}
+\begin{center}\includegraphics{_main_files/figure-latex/unnamed-chunk-19-1} \end{center}
 
 \textbf{Rh\_ICP\_ppm} representa as partes por milhão de ICP (Plasma Acoplado Indutivamente) de \textbf{ródio} contido na amostra de cromitita analisada. A váriável é contínua com distribuição gamma, o box-plot sugere a presença de outliers. E, por possuir alguns valores de grande amplitude a mediana e os valores máximo e mínimo são boas medidas de tendência central.
 
 \hypertarget{ir_icp_ppm}{%
 \subsection{Ir\_ICP\_ppm}\label{ir_icp_ppm}}
 
-\begin{center}\includegraphics{_main_files/figure-latex/unnamed-chunk-19-1} \end{center}
+\begin{center}\includegraphics{_main_files/figure-latex/unnamed-chunk-20-1} \end{center}
 
 \textbf{Ir\_ICP\_ppm} representa as partes por milhão de ICP (Plasma Acoplado Indutivamente) de \textbf{irídio} contido na amostra de cromitita analisada. A váriável é contínua com distribuição bimodal, o box-plot sugere a presença de outliers. E, por possuir alguns valores de grande amplitude a mediana e os valores máximo e mínimo são boas medidas de tendência central.
 
 \hypertarget{ru_icp_ppm}{%
 \subsection{Ru\_ICP\_ppm}\label{ru_icp_ppm}}
 
-\begin{center}\includegraphics{_main_files/figure-latex/unnamed-chunk-20-1} \end{center}
+\begin{center}\includegraphics{_main_files/figure-latex/unnamed-chunk-21-1} \end{center}
 
 \textbf{Ru\_ICP\_ppm} representa as partes por milhão de ICP (Plasma Acoplado Indutivamente) de \textbf{ruténio} contido na amostra de cromitita analisada. A váriável é contínua com distribuição gamma, o box-plot sugere a presença de outliers. E, por possuir alguns valores de grande amplitude a mediana e os valores máximo e mínimo são boas medidas de tendência central.
 
@@ -364,14 +393,14 @@ A variável \textbf{Holetype} que representa o tipo do buraco feito para coleta 
 \hypertarget{stratigraphy}{%
 \subsection{Stratigraphy}\label{stratigraphy}}
 
-\begin{center}\includegraphics{_main_files/figure-latex/unnamed-chunk-21-1} \end{center}
+\begin{center}\includegraphics{_main_files/figure-latex/unnamed-chunk-22-1} \end{center}
 
 \textbf{Stratigraphy} representa a posição estratigráfica das camadas de cromitita dentro da \textbf{Zona Crítica} a partir da base para cima. A váriável é categorica multiclasse. Através do gráfico de frequência observamos que existem 6 zonas críticas pouco frequentes, 4 zonas críticas com frequência média e 4 zonas críticas de alta frequência.
 
 \hypertarget{martriz-de-correlauxe7uxe3o}{%
 \subsection{Martriz de Correlação}\label{martriz-de-correlauxe7uxe3o}}
 
-\begin{center}\includegraphics{_main_files/figure-latex/unnamed-chunk-22-1} \end{center}
+\begin{center}\includegraphics{_main_files/figure-latex/unnamed-chunk-23-1} \end{center}
 
 \textbf{Não esquecer limpar na}
 

@@ -1,5 +1,5 @@
 --- 
-title: "Estatística e Análise de Dandos"
+title: "Estatística e Análise de Dados"
 subtitle: "Trabalho Prático"
 author: "Lirielly Nascimento e Pedro Magalhães"
 date: "18/04/2022"
@@ -11,14 +11,13 @@ pdf-cover-image: theme/images/cover.pdf
 cover-image: theme/images/cover.pdf
 ---
 
+\newpage
 
+# Introdução {-}
 
-# Introdução 
-
-## Descrição dos Dados
+## Descrição dos Dados {-}
 
 O Complexo Bushveld, a maior intrusão máfico-ultramáfica em camadas do mundo, é anfitrião de numerosas camadas de cromitita, lateralmente contínuas e quimicamente semelhantes. Com base em sua posição estratigráfica as camadas são subdivididas em um grupo inferior, médio e superior (LG, MG e UG). Dentro desses grupos as camadas são numeradas sucessivamente – da base ao topo de cada grupo. 
-
 
 Tentativas de discriminar entre camadas únicas com base em sua composição falharam - principalmente devido à sobreposição significativa de campos de composição, por exemplo, de agrupamentos minerais de cromitita e química mineral de cromita entre camadas (vizinhas).
 
@@ -26,17 +25,26 @@ O conjunto de dados que utilizaremos foi fornecido pela Cronimet SA (Pty) Ltd., 
 
 Durante a exploração na Mina Thaba, a composição das camadas de cromitita é rotineiramente restrita por apenas seis óxidos de elementos principais (Cr2O3, FeO, Al2O3, MgO, SiO2, CaO) e P. Além disso, o banco de dados da empresa contém valores para concentrações de Au e PGE, incluindo Pt, Pd, Rh, Ru e Ir. O banco de dados foi previamente filtrado para quaisquer valores ausentes (como “não analisado” ou “abaixo do limite de detecção”) entre os principais óxidos do elemento e o PGE.
 
-![Imagem 1: Complexo Bushveld](./data/CB.png)
+
+```{r echo=FALSE, fout.width='70%'}
+
+knitr::include_graphics("./data/CB.png")
+
+```
 
 Neste trabalho realizaremos algumas análises, dentre elas: análise de correlação, análise de componentes principais e análise do qui-quadrado. O nosso intuito com essas análises é verificar se conseguimos reduzir a dimensionalidade dos dados (variáveis numéricas) e obter um novo espaço de representação com uma boa representatividade das variáveis originais com as componentes criadas. Mais ainda, que as componentes selecionadas, as que explicam parte importante da dispersão, consigam mostrar a influência dos componentes geoquímicos nas amostras de cromitita.
 
-O dataset contendo os dados analisados neste trabalho pode ser acessado no seguinte [link](https://www.kaggle.com/saurabhshahane/multivariate-geochemical-classification).
+O dataset contendo os dados analisados neste trabalho pode ser acessado no seguinte
 
 
-## Definição das variáveis
+https://www.kaggle.com/saurabhshahane/multivariate-geochemical-classification.
+
+
+## Definição das variáveis {-}
+
 
 |Variável|Descrição|Tipo da variável|
-|--------|-------------------------------------|----|
+|--------:--------:|--------:|
 |HoleType|Tipo do furo que foi coletada a amostra|Categórica|
 |MaxDepth|Profundidade máxima da coleta da amostra|Categórica|
 |DepthFrom|Profundidade inicial da coleta da amostra|Numérica|
