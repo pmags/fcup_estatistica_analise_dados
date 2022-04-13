@@ -26,7 +26,7 @@ O conjunto de dados que utilizaremos foi fornecido pela Cronimet SA (Pty) Ltd., 
 Durante a exploração na Mina Thaba, a composição das camadas de cromitita é rotineiramente restrita por apenas seis óxidos de elementos principais (Cr2O3, FeO, Al2O3, MgO, SiO2, CaO) e P. Além disso, o banco de dados da empresa contém valores para concentrações de Au e PGE, incluindo Pt, Pd, Rh, Ru e Ir. O banco de dados foi previamente filtrado para quaisquer valores ausentes (como “não analisado” ou “abaixo do limite de detecção”) entre os principais óxidos do elemento e o PGE.
 
 
-```{r echo=FALSE, fout.width='70%'}
+```{r echo=FALSE, fout.width='20%'}
 
 knitr::include_graphics("./data/CB.png")
 
@@ -35,7 +35,6 @@ knitr::include_graphics("./data/CB.png")
 Neste trabalho realizaremos algumas análises, dentre elas: análise de correlação, análise de componentes principais e análise do qui-quadrado. O nosso intuito com essas análises é verificar se conseguimos reduzir a dimensionalidade dos dados (variáveis numéricas) e obter um novo espaço de representação com uma boa representatividade das variáveis originais com as componentes criadas. Mais ainda, que as componentes selecionadas, as que explicam parte importante da dispersão, consigam mostrar a influência dos componentes geoquímicos nas amostras de cromitita.
 
 O dataset contendo os dados analisados neste trabalho pode ser acessado no seguinte
-
 
 https://www.kaggle.com/saurabhshahane/multivariate-geochemical-classification.
 
