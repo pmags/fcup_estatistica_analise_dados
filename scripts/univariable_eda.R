@@ -69,7 +69,7 @@ rm(eda_categorical, eda_continuous)
 
 corr_matrix <- 
   cor(
-    dplyr::select( data, - ProjectCode, - BH_ID, - Motherhole ,- Date, - Stratigraphy, - HoleType ),
+    dplyr::select( data, - ProjectCode, - BH_ID, - Motherhole , - Stratigraphy, - HoleType, -MaxDepth ),
     method = c("pearson"),
     use = "complete.obs"
     )
