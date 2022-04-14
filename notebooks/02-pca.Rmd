@@ -45,10 +45,14 @@ pca$svd$V # Eigenvectors
 
 ```
 
+# Eigenvalues
 ```{r}
 pca$eig # Eigenvalues
 
 ```
+Ao analisarmos os auto valores, temos que se utilizarmos o critério de Kaiser, onde diz que devemos manter as componentes com auto valores acima de 1, **reteríamos apenas as 6 primeiras componentes principais**, pois dessa forma reteríamos as componentes mais informativas do que as variáveis originais, dado que estas possuem variânça maior do que as originais. 
+Mas se considerarmos o critério de Pearson, onde diz devemos manter as componentes de forma que elas expliquem pelo menos 80% da disperssão total, ai teríamos que **manter as 7 primeiras componentes principais** para atingir esse objetivo.
+
 
 ```{r}
 
@@ -56,13 +60,20 @@ barplot(pca$eig[,1],main="Eigenvalues",names.arg=1:nrow
 (pca$eig))
 
 ```
+Aqui temos um histograma onde podemos visualizar a amplitude de cada um dos auto valores e podemos ver que os 3 primeiros realmente se destacam dos demais já os seguintes vão diminuindo suas amplitudes gradativamente sem nenhuma alta discrepância de maneira a formar degraus como os 3 primeiros.
+
 
 ```{r}
 
 round(pca$var$contrib, 3)
 
 ```
-
+Analisando os resultados de contribuição das componentes principais com as variáveis originais da nossa base de dados, podemos concluir que:
+  1. A componente principal 1 (Dim 1) tem contribuição bem dividida entre as seguintes variáveis: DepthFrom, DepthTo, Cr2O3_%, Pt_ICP_ppm, Rh_ICP_ppm, Ir_ICP_ppm e um valor melhor para as demais, dessa forma essas 6 variáveis citadas são melhores representadas pela Dim 1 quando olhamos para a contribuição.
+  2. A componente principal 2 (Dim 2) possui contribuição das seguintes variáveis: Cr2O3_%, SiO2_%, Ir_ICP_ppm, Ru_ICP_ppm e um menor valor de contribuição para as demais variáveis, sendo assim essas 4 variáveis que representam somente elementos químicos presentes na análise de uma amostra de cromitita, são melhores representadas pela Dim 2 quando olhamos para as contribuições.
+  3. Para a componente principal 3 (Dim 3) temos uma maior contribuição das variáveis DepthFrom, DepthTo, MgO_%, Filter e um menor valor de contribuição para as demais variáveis.
+  4. Para a componente principal 4 (Dim 4) vemos uma maior contribuição das variáveis FeO_%, Al2O3_%, P_%, Au_ICP_ppm e Pd_ICP_ppm, como podemos observar nessa componente temos uma maior contribuição dessas 5 variaveis que também só correspondem aos elementos químicos presentes na amostra analisada de cromitita.
+  5. E essa mesma análise continua para as demais componentes.
 
 \newpage
 
