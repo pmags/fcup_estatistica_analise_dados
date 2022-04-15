@@ -39,19 +39,29 @@ pca <- PCA(data %>% select_if(is.numeric), ncp = 7)
 
 ```
 
+
+## Eigenvectors
 ```{r}
 
 pca$svd$V # Eigenvectors
 
 ```
+Podemos ver a tabela acima os 7 primeiros autovetores correspondentes aos autovalores em ordem decrescente. Sabemos que os autovetores estão normalizados e isso significa que a soma dos quadrados de cada componente do vetor é igual a 1. E, sabemos que eles são ortogonais, pois o produto de quaisquer dois autovetores, isto é a soma das componentes dos vetores multiplicadas termo a termo é sempre igual a zero. E isso significa que as componentes não estão correlacionadas entre si.
 
-# Eigenvalues
+Com os autovetores nós conseguimos escrever as equações das componentes principais como combinação linear dos autovetores e as variáveis originais normalizadas.
+
+
+## Eigenvalues
 ```{r}
 pca$eig # Eigenvalues
 
 ```
-Ao analisarmos os auto valores, temos que se utilizarmos o critério de Kaiser, onde diz que devemos manter as componentes com auto valores acima de 1, **reteríamos apenas as 6 primeiras componentes principais**, pois dessa forma reteríamos as componentes mais informativas do que as variáveis originais, dado que estas possuem variânça maior do que as originais. 
-Mas se considerarmos o critério de Pearson, onde diz devemos manter as componentes de forma que elas expliquem pelo menos 80% da disperssão total, ai teríamos que **manter as 7 primeiras componentes principais** para atingir esse objetivo.
+Analisando as medidas de correlação, pois estamos fazendo o PCA normatizado o que se justifica dado que algumas variáveis possuem unidades muito diferentes e dispersão muito diferente. Nós obtemos a lista dos 16 autovalores apresentados aqui de forma decrescente.
+
+Ao analisarmos os autovalores, temos que se utilizarmos o critério de Kaiser, onde diz que devemos manter as componentes com autovalores acima de 1, **reteríamos apenas as 6 primeiras componentes principais**, pois dessa forma reteríamos as componentes mais informativas do que as variáveis originais, dado que estas possuem variância maior do que as originais. 
+
+Mas se considerarmos o critério de Pearson, onde diz devemos manter as componentes de forma que elas expliquem pelo menos 80% da dispersão total, aí teríamos que **manter as 7 primeiras componentes principais** para atingir esse objetivo.
+
 
 
 ```{r}
@@ -62,18 +72,28 @@ barplot(pca$eig[,1],main="Eigenvalues",names.arg=1:nrow
 ```
 Aqui temos um histograma onde podemos visualizar a amplitude de cada um dos auto valores e podemos ver que os 3 primeiros realmente se destacam dos demais já os seguintes vão diminuindo suas amplitudes gradativamente sem nenhuma alta discrepância de maneira a formar degraus como os 3 primeiros.
 
-
+## Correlação entre as componentes principais e as variáveis originais
 ```{r}
 
-round(pca$var$contrib, 3)
+round(pca$var$cor, 3)
 
 ```
-Analisando os resultados de contribuição das componentes principais com as variáveis originais da nossa base de dados, podemos concluir que:
-  1. A componente principal 1 (Dim 1) tem contribuição bem dividida entre as seguintes variáveis: DepthFrom, DepthTo, Cr2O3_%, Pt_ICP_ppm, Rh_ICP_ppm, Ir_ICP_ppm e um valor melhor para as demais, dessa forma essas 6 variáveis citadas são melhores representadas pela Dim 1 quando olhamos para a contribuição.
-  2. A componente principal 2 (Dim 2) possui contribuição das seguintes variáveis: Cr2O3_%, SiO2_%, Ir_ICP_ppm, Ru_ICP_ppm e um menor valor de contribuição para as demais variáveis, sendo assim essas 4 variáveis que representam somente elementos químicos presentes na análise de uma amostra de cromitita, são melhores representadas pela Dim 2 quando olhamos para as contribuições.
-  3. Para a componente principal 3 (Dim 3) temos uma maior contribuição das variáveis DepthFrom, DepthTo, MgO_%, Filter e um menor valor de contribuição para as demais variáveis.
-  4. Para a componente principal 4 (Dim 4) vemos uma maior contribuição das variáveis FeO_%, Al2O3_%, P_%, Au_ICP_ppm e Pd_ICP_ppm, como podemos observar nessa componente temos uma maior contribuição dessas 5 variaveis que também só correspondem aos elementos químicos presentes na amostra analisada de cromitita.
-  5. E essa mesma análise continua para as demais componentes.
+Analisando os resultados de correlação entre as componentes principais e as variáveis originais da nossa base de dados, podemos concluir que:
+  
+  1. A componente principal 1 (Dim 1) tem correlação forte negativa com as variáveis DepthFrom, DepthTo, Cr2O3_% e correlação forte positiva com as variáveis CaO_%, SiO2_%, Pt_ICP_ppm, Pd_ICP_ppm, Rh_ICP_ppm, Ir_ICP_ppm. Esta componente representa amostras com maior concentração de óxido de cromo, óxido de silício, ppm de platina, ppm de paládio, ppm de ródio e ppm de irídio, mas também com uma menor concentração de óxido de cromo e ainda representam amostras que foram coletadas em profundidades baixas, mais próximas da superfície.
+  
+  2. A componente principal 2 (Dim 2) possui correlação forte negativa com as seguintes variável SiO2_% e correlação forte positiva com as variáveis Cr2O3_%, FeO_%, Ir_ICP_ppm, Ru_ICP_ppm. O que representa somente elementos químicos presentes na análise de uma amostra de cromitita, são melhores representadas pela Dim 2 quando olhamos para as correlações. Sendo assim essa componente representa amostras com maior concentração de óxido de cromo, óxido de ferro, ppm de ruténio e ppm de irídio, mas também com menor concentração de óxido de silício.
+  
+  3. Para a componente principal 3 (Dim 3) temos uma apenas correlação forte positiva com as variáveis DepthFrom, DepthTo, MgO_%. Sendo assim essa componente identifica amostras com maiores concentrações de óxido de magnésio e amostras retiradas de locais mais profundos, mais distantes da superfície.
+  
+  4. Para a componente principal 4 (Dim 4) vemos uma maior correlação positiva da variável P_% e uma correlação forte negativa da variável Al2O3_% então essa componente descreve amostras com maiores concentrações de fósforo e menores concentrações de óxido de alumínio.
+  
+  5. Para a componente principal 5 (Dim 5) podemos ver que temos uma maior correlação positiva com a variável Au_ICP_ppm, desta forma essa componente consegue identificar amostras com uma maior concentração de ppm de ouro.
+  
+  6. Para a componente principal 6 (Dim 6) temos uma correlação forte positiva com a variável P_%, sendo assim essa componente consegue representar amostras com maior concentração de fósforo.
+  
+  7. E por fim a componente principal 7 (Dim 7) não possui correlação forte nem positiva nem negativa com nenhuma das variáveis originais.
+
 
 \newpage
 
