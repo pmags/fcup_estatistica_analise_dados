@@ -23,6 +23,7 @@ knitr::opts_chunk$set(fig.align="center", echo=FALSE, fig.show = "hold")
 chi_test_factors
 
 ```
+Analisando os testes qui-quadrados de todas as combinações das variáveis rejeitamos todas as hipoteses nulas correspondentes aos pares de variáveis analisadas nos testes qui-quadrados, pois **p-value < 0.05**. A hipotese Ho rejeitada afirma que o par te variáveis analisada no teste são idependentes.
 
 ```{r}
 
@@ -38,6 +39,8 @@ pca <- PCA(data %>% select_if(is.numeric), ncp = 7)
 
 
 ```
+As correlações geralmente são representadas em gráficos de círculo de correlações. No gráfico acima, temos o círculo de correlação entre a componente 1 e 2. O interessante nesse gráfico é analisar as correlações que se opõe via sinal. Dessa forma, podemos ver pela primeira componente que todos os ppm (ouro, platina, paládio, ródio, irídio e ruténio) e o óxido de alumínio são opostos ao fósforo e óxido de magnésio, ou seja, notamos que amostras tem maior concentração distintas desses elementos, os primeiros mencionados em maior concentração e os últimos em menor concentração.
+Já a componente 2 nos mostra uma oposição entre profundidade, óxido de cromo e óxido de ferro em oposição a óxido de cálcio e óxido de silício seguindo a mesma ideia da explicação anterior.
 
 
 ## Eigenvectors
@@ -80,19 +83,43 @@ round(pca$var$cor, 3)
 ```
 Analisando os resultados de correlação entre as componentes principais e as variáveis originais da nossa base de dados, podemos concluir que:
   
-  1. A componente principal 1 (Dim 1) tem correlação forte negativa com as variáveis DepthFrom, DepthTo, Cr2O3_% e correlação forte positiva com as variáveis CaO_%, SiO2_%, Pt_ICP_ppm, Pd_ICP_ppm, Rh_ICP_ppm, Ir_ICP_ppm. Esta componente representa amostras com maior concentração de óxido de cromo, óxido de silício, ppm de platina, ppm de paládio, ppm de ródio e ppm de irídio, mas também com uma menor concentração de óxido de cromo e ainda representam amostras que foram coletadas em profundidades baixas, mais próximas da superfície.
+  1. A componente principal 1 (*Dim 1*) tem correlação forte negativa com as variáveis **DepthFrom, DepthTo, Cr2O3_%** e correlação forte positiva com as variáveis **CaO_%, SiO2_%, Pt_ICP_ppm, Pd_ICP_ppm, Rh_ICP_ppm, Ir_ICP_ppm**. Esta componente representa amostras com maior concentração de óxido de cromo, óxido de silício, ppm de platina, ppm de paládio, ppm de ródio e ppm de irídio, mas também com uma menor concentração de óxido de cromo e ainda representam amostras que foram coletadas em profundidades baixas, mais próximas da superfície.
   
-  2. A componente principal 2 (Dim 2) possui correlação forte negativa com as seguintes variável SiO2_% e correlação forte positiva com as variáveis Cr2O3_%, FeO_%, Ir_ICP_ppm, Ru_ICP_ppm. O que representa somente elementos químicos presentes na análise de uma amostra de cromitita, são melhores representadas pela Dim 2 quando olhamos para as correlações. Sendo assim essa componente representa amostras com maior concentração de óxido de cromo, óxido de ferro, ppm de ruténio e ppm de irídio, mas também com menor concentração de óxido de silício.
+  2. A componente principal 2 (*Dim 2*) possui correlação forte negativa com as seguintes variável **SiO2_%** e correlação forte positiva com as variáveis **Cr2O3_%, FeO_%, Ir_ICP_ppm, Ru_ICP_ppm**. O que representa somente elementos químicos presentes na análise de uma amostra de cromitita, são melhores representadas pela Dim 2 quando olhamos para as correlações. Sendo assim essa componente representa amostras com maior concentração de óxido de cromo, óxido de ferro, ppm de ruténio e ppm de irídio, mas também com menor concentração de óxido de silício.
   
-  3. Para a componente principal 3 (Dim 3) temos uma apenas correlação forte positiva com as variáveis DepthFrom, DepthTo, MgO_%. Sendo assim essa componente identifica amostras com maiores concentrações de óxido de magnésio e amostras retiradas de locais mais profundos, mais distantes da superfície.
+  3. Para a componente principal 3 (*Dim 3*) temos uma apenas correlação forte positiva com as variáveis **DepthFrom, DepthTo, MgO_%**. Sendo assim essa componente identifica amostras com maiores concentrações de óxido de magnésio e amostras retiradas de locais mais profundos, mais distantes da superfície.
   
-  4. Para a componente principal 4 (Dim 4) vemos uma maior correlação positiva da variável P_% e uma correlação forte negativa da variável Al2O3_% então essa componente descreve amostras com maiores concentrações de fósforo e menores concentrações de óxido de alumínio.
+  4. Para a componente principal 4 (*Dim 4*) vemos uma maior correlação positiva da variável P_% e uma correlação forte negativa da variável **Al2O3_%** então essa componente descreve amostras com maiores concentrações de fósforo e menores concentrações de óxido de alumínio.
   
-  5. Para a componente principal 5 (Dim 5) podemos ver que temos uma maior correlação positiva com a variável Au_ICP_ppm, desta forma essa componente consegue identificar amostras com uma maior concentração de ppm de ouro.
+  5. Para a componente principal 5 (*Dim 5*) podemos ver que temos uma maior correlação positiva com a variável **Au_ICP_ppm**, desta forma essa componente consegue identificar amostras com uma maior concentração de ppm de ouro.
   
-  6. Para a componente principal 6 (Dim 6) temos uma correlação forte positiva com a variável P_%, sendo assim essa componente consegue representar amostras com maior concentração de fósforo.
+  6. Para a componente principal 6 (*Dim 6*) temos uma correlação forte positiva com a variável **P_%**, sendo assim essa componente consegue representar amostras com maior concentração de fósforo.
   
-  7. E por fim a componente principal 7 (Dim 7) não possui correlação forte nem positiva nem negativa com nenhuma das variáveis originais.
+  7. E por fim a componente principal 7 (*Dim 7*) não possui correlação forte nem positiva nem negativa com nenhuma das variáveis originais.
+
+## Contribuição presente nas componentes principais
+```{r}
+
+round(pca$var$contrib, 3)
+
+```
+Aqui podemos ver que na componente principal 1 (*Dim 1*) as variáveis que representam a profundidade, óxido de cromo, ppm de platina, ppm de ródio e ppm de irídio correspondem as variáveis que tem contribuições mais importantes para a componente e ainda são as mesmas variáveis que possuem maiores correlação. Analogamente essa análise pode ser feita para as demais componentes, seguindo o mesmo raciocínio.
+
+## Gráfico PCA dos indivíduos 
+```{r}
+plot(pca, axes = c(1,2))
+```
+No gráfico de indivíduos acima conseguimos observar que os indivíduos **1136 e 651** tem alta concentração dos ppm (ouro, platina, paládio, ródio, irídio e ruténio) e de óxido de alumínio isso porque a componente 1 nos mostra isso. E, os indivíduos **534, 745 e 160** tem menores concentrações de óxido de cálcio e óxido de silício. Os outros indivíduos como estão bastante concentrados nos quadrantes de 1 a 4 não conseguimos os identificar para uma análise apropriada.
+
+```{r}
+plot(pca, axes = c(3,4))
+```
+Aqui temos que o indivíduo **881** tem uma alta concetração de óxido de ferro e fósforo. Enquanto os indíviduos **657 e 1143** tem uma alta concentração de ppm de ouro, ppm de paládio e óxido de manganês.
+
+```{r}
+plot(pca, axes = c(5,6))
+```
+Já nesté gráfico dos indivíduos representados pelas componentes 5 e 6, podemos observar que o indivíduo **881** tem uma alta concentração de fósforo indicada pela componente 6, os indivíduos **275, 105 e 647** tem uma alta concentração de ppm de outro indicada pela componente 5.
 
 
 \newpage
