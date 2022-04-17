@@ -23,7 +23,7 @@ knitr::opts_chunk$set(fig.align="center", echo=FALSE, fig.show = "hold")
 chi_test_factors
 
 ```
-Analisando os testes qui-quadrados de todas as combinações das variáveis rejeitamos todas as hipoteses nulas correspondentes aos pares de variáveis analisadas nos testes qui-quadrados, pois **p-value < 0.05**. A hipotese Ho rejeitada afirma que o par te variáveis analisada no teste são idependentes.
+Analisando os testes qui-quadrados de todas as combinações das variáveis rejeitamos todas as hipóteses nulas correspondentes aos pares de variáveis analisadas nos testes qui-quadrados, pois **p-value < 0.05**. A hipótese Ho rejeitada afirma que o par te variáveis analisada no teste são idependentes.
 
 ```{r}
 
