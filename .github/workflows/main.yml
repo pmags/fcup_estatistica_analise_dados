@@ -16,6 +16,8 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
+    #container: r-base:4.1.3
+    container: dataquality/blogdown
     env:
       RENV_PATHS_ROOT: ~/.local/share/renv
     steps:
