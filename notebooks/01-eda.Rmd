@@ -209,5 +209,7 @@ corrplot::corrplot(
   tl.cex = 0.5)
 
 ```
+A partir da matriz de correlação acima, podemos ver que as variáveis de profundidade são altamente correlacionadas entre si, positivamente. A variável óxido de cromo tem correlação negativa com as variáveis óxido de silício e óxido de cálcio. A variável óxido de ferro também tem uma correlação negativa com a variável óxido de silício. A variável ppm de ródio tem correlação positiva com as variáveis ppm de platina, ppm de irídio e ppm de paládio. Já a variável ppm de irídio tem correlação positiva com as variáveis ppm de platina e ppm de ruténio.
+Essas correlações, tanto positiva quanto negativa, indicam que ao aplicarmos PCA conseguiremos um número de componentes **q** menor que o número de variáveis originais **p** que descreve bem a dispersão e a variabilidade dos dados.
 
 \newpage
