@@ -41,27 +41,41 @@ https://www.kaggle.com/saurabhshahane/multivariate-geochemical-classification.
 
 ## Definição das variáveis {-}
 
+- HoleType (Categórica): Tipo do furo que foi coletada a amostra
 
-|Variável|Descrição|Tipo da variável|
-|--------:--------:|--------:|
-|HoleType|Tipo do furo que foi coletada a amostra|Categórica|
-|MaxDepth|Profundidade máxima da coleta da amostra|Categórica|
-|DepthFrom|Profundidade inicial da coleta da amostra|Numérica|
-|DepthTo|Profundidade final da coleta da amostra|Numérica|
-|Cr2O3_%|Percentual de Óxido de Cromo presente na amostra|Numérica|
-|FeO_%|Percentual de Óxido de Ferro presente na amostra|Numérica|
-|SiO2_%|Percentual de Dióxido de Silício presente na amostra|Numérica|
-|MgO_%|Percentual de Óxido de Magnésio presente na amostra|Numérica|
-|Al2O3_%|Percentual de Óxido de Alumínio presente na amostra|Numérica|
-|CaO_%|Percentual de Óxido de Cálcio presente na amostra|Numérica|
-|P_%|Percentual de Fósforo presente na amostra|Numérica|
-|Au_ICP_ppm|Partes por milhão de ICP (Plasma Acoplado Indutivamente) de Ouro|Numérica|
-|Pt_ICP_ppm|Partes por milhão de ICP (Plasma Acoplado Indutivamente) de Platina|Numérica|
-|Pd_ICP_ppm|Partes por milhão de ICP (Plasma Acoplado Indutivamente) de Paládio|Numérica|
-|Rh_ICP_ppm|Partes por milhão de ICP (Plasma Acoplado Indutivamente) de Ródio|Numérica|
-|Ir_ICP_ppm|Partes por milhão de ICP (Plasma Acoplado Indutivamente) de Irídio|Numérica|
-|Ru_ICP_ppm|Partes por milhão de ICP (Plasma Acoplado Indutivamente) de Ruténio|Numérica|
-|Stratigraphy|Posição estratigráfica das camadas de cromitita dentro da Zona Crítica a partir da base para cima|Categórica|
+- MaxDepth (Categórica): Profundidade máxima da coleta da amostra
+
+- DepthFrom (Numérica): Profundidade inicial da coleta da amostra
+
+- DepthTo (Numérica): Profundidade final da coleta da amostra
+
+- Cr2O3_% (Numérica): Percentual de Óxido de Cromo presente na amostra
+
+- FeO_% (Numérica): Percentual de Óxido de Ferro presente na amostra
+
+- SiO2_% (Numérica): Percentual de Dióxido de Silício presente na amostra
+
+- MgO_% (Numérica): Percentual de Óxido de Magnésio presente na amostra
+
+- Al2O3_% (Numérica: Percentual de Óxido de Alumínio presente na amostra
+
+- CaO_% (Numérica): Percentual de Óxido de Cálcio presente na amostra
+
+- P_% (Numérica): Percentual de Fósforo presente na amostra
+
+- Au_ICP_ppm (Numérica): Partes por milhão de ICP (Plasma Acoplado Indutivamente) de Ouro
+
+- Pt_ICP_ppm (Numérica): Partes por milhão de ICP (Plasma Acoplado Indutivamente) de Platina
+
+- Pd_ICP_ppm (Numérica): Partes por milhão de ICP (Plasma Acoplado Indutivamente) de Paládio
+
+- Rh_ICP_ppm (Numérica): Partes por milhão de ICP (Plasma Acoplado Indutivamente) de Ródio
+
+- Ir_ICP_ppm (Numérica): Partes por milhão de ICP (Plasma Acoplado Indutivamente) de Irídio
+
+- Ru_ICP_ppm (Numérica): Partes por milhão de ICP (Plasma Acoplado Indutivamente) de Ruténio
+
+- Stratigraphy (Categórica): Posição estratigráfica das camadas de cromitita dentro da Zona Crítica a partir da base para cima
 
 
 \newpage

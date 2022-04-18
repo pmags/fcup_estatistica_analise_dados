@@ -94,8 +94,11 @@ for(i in 1:nrow(comb2)) {
   
   x1 <- data[[comb2[i,1]]]
   x2 <- data[[comb2[i,2]]]
+  
   res <- chisq.test(x1, x2)
-  chi_test_factors[[i]] <- res
+  chi_test_factors[[i]] <- res["p.value"]
+  chi_test_factors[[i]]["Variavel 1"] <- comb2[i,1]
+  chi_test_factors[[i]]["Variavel 2"] <- comb2[i,2]
   
 }
 

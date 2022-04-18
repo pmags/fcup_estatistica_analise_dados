@@ -97,10 +97,14 @@ eda_continuous <- function(data, x, t = "bought") {
   
   cv <- round(sd(data[[x]], na.rm = TRUE)/mean(data[[x]],na.rm = TRUE) * 100, 2)
   
-  summary[length(summary) + 1] <- cv
-  summary <- setNames(summary,c(names(summary),"Var. Coef"))
+  #summary[length(summary) + 1] <- cv
+  #summary <- setNames(summary,c(names(summary),"Var. Coef"))
   
-  grid <- arrangeGrob(qqplot, boxplot, tableGrob(summary), density, 
+  df <- as.data.frame.matrix(summary)
+  df[nrow(df) + 1,] <- paste0("Var. Coef  :", cv)
+  rownames(df) <- NULL
+  
+  grid <- arrangeGrob(qqplot, boxplot, tableGrob(df), density, 
                       layout_matrix = layout)  
   
   return(grid)
@@ -171,10 +175,14 @@ eda_discrete <- function(data, x, t = "bought") {
   
   cv <- sd(data, na.rm = TRUE)/mean(data,na.rm = TRUE) * 100
   
-  summary[length(summary) + 1] <- cv
-  summary <- setNames(summary,c(names(summary),"Var. Coef"))
+  #summary[length(summary) + 1] <- cv
+  #summary <- setNames(summary,c(names(summary),"Var. Coef"))
   
-  grid <- arrangeGrob(qqplot, boxplot,tableGrob(summary), histogram, freq_plot,
+  df <- as.data.frame.matrix(summary)
+  df[nrow(df) + 1,] <- paste0("Var. Coef  :", cv)
+  rownames(df) <- NULL
+  
+  grid <- arrangeGrob(qqplot, boxplot,tableGrob(df), histogram, freq_plot,
                       layout_matrix = layout)
   
   return(grid)

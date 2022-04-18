@@ -32,7 +32,7 @@ A variável **Holetype** que representa o tipo do buraco feito para coleta da am
 
 ```{r}
 
-grid.draw(eda_map$MaxDepth2) 
+grid.draw(eda_map$MaxDepth) 
 
 ```
 **MaxDepth** é a profundidade máxima do buraco utilizado para coleta da amostra de cromitita para a análise química. A váriável é categórica sendo que as classes **"Low"** e **"Middle"** tem praticamente a mesma proporção e a classe **"Depth"** tem aproximadamente o dobro da proporção das outras duas.  
@@ -200,12 +200,14 @@ grid.draw(eda_map$Stratigraphy)
 
 ## Martriz  de Correlação
 
-```{r}
+```{r message=FALSE, warning=FALSE}
 
-corrplot::corrplot(corr_matrix, method = "number")
+corrplot::corrplot(
+  corr_matrix, 
+  method = "number", 
+  number.cex = 0.6, 
+  tl.cex = 0.5)
 
 ```
-
-**Não esquecer limpar na**
 
 \newpage

@@ -20,16 +20,10 @@ knitr::opts_chunk$set(fig.align="center", echo=FALSE, fig.show = "hold")
 
 ```{r}
 
-chi_test_factors
+do.call(rbind.data.frame, chi_test_factors)
 
 ```
 Analisando os testes qui-quadrados de todas as combinações das variáveis rejeitamos todas as hipóteses nulas correspondentes aos pares de variáveis analisadas nos testes qui-quadrados, pois **p-value < 0.05**. A hipótese Ho rejeitada afirma que o par te variáveis analisada no teste são idependentes.
-
-```{r}
-
-corr_matrix
-
-```
 
 
 ```{r}
@@ -39,7 +33,9 @@ pca <- PCA(data %>% select_if(is.numeric), ncp = 7)
 
 
 ```
+
 As correlações geralmente são representadas em gráficos de círculo de correlações. No gráfico acima, temos o círculo de correlação entre a componente 1 e 2. O interessante nesse gráfico é analisar as correlações que se opõe via sinal. Dessa forma, podemos ver pela primeira componente que todos os ppm (ouro, platina, paládio, ródio, irídio e ruténio) e o óxido de alumínio são opostos ao fósforo e óxido de magnésio, ou seja, notamos que amostras tem maior concentração distintas desses elementos, os primeiros mencionados em maior concentração e os últimos em menor concentração.
+
 Já a componente 2 nos mostra uma oposição entre profundidade, óxido de cromo e óxido de ferro em oposição a óxido de cálcio e óxido de silício seguindo a mesma ideia da explicação anterior.
 
 
