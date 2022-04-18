@@ -31,6 +31,9 @@ jobs:
           key: ${{ runner.os }}-renv-${{ hashFiles('**/renv.lock') }}
           restore-keys: |
             ${{ runner.os }}-renv-
+            
+      - name: install dependencies
+        run: sudo apt-get install cmake
 
       - name: Restore packages
         shell: Rscript {0}
