@@ -51,6 +51,19 @@
 % Allow footnotes in longtable head/foot
 \IfFileExists{footnotehyper.sty}{\usepackage{footnotehyper}}{\usepackage{footnote}}
 \makesavenoteenv{longtable}
+\usepackage{graphicx}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+% Set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
 \setlength{\emergencystretch}{3em} % prevent overfull lines
 \providecommand{\tightlist}{%
   \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
@@ -233,7 +246,7 @@ O conjunto de dados que utilizaremos foi fornecido pela Cronimet SA (Pty) Ltd., 
 
 Durante a exploração na Mina Thaba, a composição das camadas de cromitita é rotineiramente restrita por apenas seis óxidos de elementos principais (Cr2O3, FeO, Al2O3, MgO, SiO2, CaO) e P. Além disso, o banco de dados da empresa contém valores para concentrações de Au e PGE, incluindo Pt, Pd, Rh, Ru e Ir. O banco de dados foi previamente filtrado para quaisquer valores ausentes (como ``não analisado'' ou ``abaixo do limite de detecção'') entre os principais óxidos do elemento e o PGE.
 
-\begin{center}\includegraphics{./data/CB} \end{center}
+\includegraphics{./data/CB.png}
 
 Neste trabalho realizaremos algumas análises, dentre elas: análise de correlação, análise de componentes principais e análise do qui-quadrado. O nosso intuito com essas análises é verificar se conseguimos reduzir a dimensionalidade dos dados (variáveis numéricas) e obter um novo espaço de representação com uma boa representatividade das variáveis originais com as componentes criadas. Mais ainda, que as componentes selecionadas, as que explicam parte importante da dispersão, consigam mostrar a influência dos componentes geoquímicos nas amostras de cromitita.
 
@@ -421,6 +434,9 @@ A variável \textbf{Holetype} que representa o tipo do buraco feito para coleta 
 \subsection{Martriz de Correlação}\label{martriz-de-correlauxe7uxe3o}}
 
 \begin{center}\includegraphics{_main_files/figure-latex/unnamed-chunk-23-1} \end{center}
+
+A partir da matriz de correlação acima, podemos ver que as variáveis de profundidade são altamente correlacionadas entre si, positivamente. A variável óxido de cromo tem correlação negativa com as variáveis óxido de silício e óxido de cálcio. A variável óxido de ferro também tem uma correlação negativa com a variável óxido de silício. A variável ppm de ródio tem correlação positiva com as variáveis ppm de platina, ppm de irídio e ppm de paládio. Já a variável ppm de irídio tem correlação positiva com as variáveis ppm de platina e ppm de ruténio.
+Essas correlações, tanto positiva quanto negativa, indicam que ao aplicarmos PCA conseguiremos um número de componentes \textbf{q} menor que o número de variáveis originais \textbf{p} que descreve bem a variabilidade dos dados.
 
 \newpage
 
