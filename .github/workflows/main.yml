@@ -33,7 +33,7 @@ jobs:
             ${{ runner.os }}-renv-
             
       - name: install dependencies
-        run: sudo apt-get update -y && sudo apt-get update && sudo apt-get install cmake
+        run: sudo apt-get update -y && sudo apt-get -y install cmake
 
       - name: Restore packages
         shell: Rscript {0}
