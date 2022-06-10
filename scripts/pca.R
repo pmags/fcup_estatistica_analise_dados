@@ -13,6 +13,9 @@
 
 library(tidyverse)
 library(FactoMineR)
+library(factoextra)
+library(fpc)
+library(NbClust)
 
 ## Import dataset
 
