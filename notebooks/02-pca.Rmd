@@ -124,12 +124,271 @@ plot(pca, axes = c(5,6))
 Já nesté gráfico dos indivíduos representados pelas componentes 5 e 6, podemos observar que o indivíduo **881** tem uma alta concentração de fósforo indicada pela componente 6, os indivíduos **275, 105 e 647** tem uma alta concentração de ppm de outro indicada pela componente 5.
 
 
+Pegando as componentes mais importantes para utilizar na sequência nos métodos de clusterização e classificação
 ```{r}
 var = as_tibble(factoextra::get_pca_ind(pca)$coord)
 ```
 
+K-means plot método do cutuvelo
 ```{r}
-var = scale(var)
+d = daisy(var)
+resultados = rep(0, 14)
+for (i in c(2,3,4,5,6,7,8,9,10,11,12,13,14,15))
+{
+  fit           = kmeans(var, i)
+  y_cluster     = fit$cluster
+  sk            = silhouette(y_cluster, d)
+  resultados[i] = fit$tot.withinss
+}
+plot(2:15,resultados[2:15],type="o",col="purple",pch=0,xlab="Número de clusters",ylab="tot.tot.withinss")
+```
+
+Continuamos testando, com a função kmeansruns com os critérios asw (silhueta média) e ch (Calinski-Harabasz), que estima a razão entre a distância entre clusters e a distância intra-cluster, quanto maior a razão, melhor o modelo.
+```{r}
+fit_ch  = kmeansruns(var, krange = 2:15, criterion = "ch") 
+fit_asw = kmeansruns(var, krange = 2:15, criterion = "asw") 
+```
+
+```{r}
+fit_ch$bestk
+fit_asw$bestk
+```
+
+
+Plotando os gráficos para os métodos aplicados
+```{r}
+plot(2:16, fit_asw$crit, type="o",col="purple",pch=0,xlab="Número de clústers",ylab="Criterio silueta media")
+```
+
+```{r}
+plot(2:16,fit_ch$crit,type="o",col="purple",pch=0,xlab="Número de clústers",ylab="Criterio Calinski-Harabasz")
+```
+Vemos que os valores são 3 para ambos os métodos Calinski-Harabasz e para a silhueta média, mostrados nos gráficos.
+
+
+Vamos primeiro realizar o aprendizado para k=3
+```{r}
+kmeansclusters = kmeans(var, 3)
+
+# Kernel length and width
+plot(var[c(1,2)], col=kmeansclusters$cluster)
+```
+
+```{r}
+plot(var[c(2,4)], col=kmeansclusters$cluster)
+```
+
+
+```{r}
+table(kmeansclusters$cluster, data$MaxDepth)
+```
+
+Para avaliar ainda mais o modelo obteremos a qualidade com o parâmetro Silhouette que determina a coesão dos clusters, medindo a similaridade de cada dado com os de seu cluster em relação aos dados de outros clusters. Observamos que não há valores negativos, indicando que os clusters são bem coesos.
+
+Vamos agora inspecionar os clusters.
+
+Vamos também inspecionar os gráficos de silhueta, vemos alguns valores abaixo de zero, o que indica boa qualidade no modelo. O valor médio da silhueta também é um bom indicador, vamos compará-lo com os demais modelos.
+```{r}
+library(factoextra)
+sil = silhouette(kmeansclusters$cluster,daisy(var))
+fviz_silhouette(sil,label=FALSE,print.summary=FALSE)
+```
+
+Por fim obteremos o índice dunn que também realiza uma avaliação obtendo uma razão entre a distância mínima dos dados em diferentes clusters e a distância máxima intra-cluster. Quanto maior o dunn, melhor a coesão dos clusters.
+```{r}
+clust_stats = cluster.stats(d, kmeansclusters$cluster)
+clust_stats$dunn
+```
+
+```{r}
+kmeansclusters = kmeans(var, 8)
+```
+
+```{r}
+library(factoextra)
+sil = silhouette(kmeansclusters$cluster,daisy(var))
+fviz_silhouette(sil, label=FALSE,print.summary=FALSE)
+```
+
+
+```{r}
+clust_stats = cluster.stats(d, kmeansclusters$cluster)
+clust_stats$dunn
+```
+
+
+```{r}
+num_clusters = fviz_nbclust(var, kmeans, k.max = 15, 
+          method = "wss", linecolor ="steelblue")
+num_clusters
+```
+
+
+```{r}
+fit2 = hclust(d, method="ward.D2")
+```
+
+
+```{r}
+fviz_dend(fit2, k = 3, # Cut in four groups
+          cex = 0.5, # label size
+          k_colors = c("#2E9FDF", "#00AFBB", "#E7B800"),
+          color_labels_by_k = TRUE, # color labels by groups
+          rect = TRUE # Add rectangle around groups
+          )
+```
+
+
+```{r}
+fit1 = Mclust(var)
+summary(fit1)
+```
+
+```{r}
+# BIC values used to choose the number of clusters.
+fviz_mclust(fit1, "BIC", palette = "jco")
+```
+
+```{r}
+# Classification 
+fviz_mclust(fit1, "classification", geom = "point", 
+            pointsize = 1.5, palette = "jco")
+
+```
+
+```{r}
+sil = silhouette(fit1$classification,d)
+fviz_silhouette(sil,label=FALSE,print.summary=FALSE)
+```
+
+
+```{r}
+table(fit3$classification,data$MaxDepth)
+```
+
+```{r}
+clust_stats = cluster.stats(d,fit3$classification)
+clust_stats$dunn
+```
+
+
+Pegando as componentes mais importantes para utilizar na sequência nos métodos de clusterização e classificação
+
+
+```{r}
+var = data[c("Cr2O3_%", "FeO_%", "SiO2_%", "MgO_%", "Al2O3_%", "CaO_%", "P_%", 
+             "Au_ICP_ppm", "Pt_ICP_ppm", "Pd_ICP_ppm", "Rh_ICP_ppm", 
+             "Ir_ICP_ppm", "Ru_ICP_ppm")]
+```
+
+```{r}
+var[is.na(var)] = 0
+any(is.na(var))
+```
+
+
+K-means plot método do cutuvelo
+```{r}
+d = daisy(var)
+resultados = rep(0, 14)
+for (i in c(2,3,4,5,6,7,8,9,10,11,12,13,14,15))
+{
+  fit           = kmeans(var, i)
+  y_cluster     = fit$cluster
+  sk            = silhouette(y_cluster, d)
+  resultados[i] = fit$tot.withinss
+}
+plot(2:15,resultados[2:15],type="o",col="purple",pch=0,xlab="Número de clusters",ylab="tot.tot.withinss")
+```
+
+Continuamos testando, com a função kmeansruns com os critérios asw (silhueta média) e ch (Calinski-Harabasz), que estima a razão entre a distância entre clusters e a distância intra-cluster, quanto maior a razão, melhor o modelo.
+```{r}
+fit_ch  = kmeansruns(var, krange = 2:15, criterion = "ch") 
+fit_asw = kmeansruns(var, krange = 2:15, criterion = "asw") 
+```
+
+```{r}
+fit_ch$bestk
+fit_asw$bestk
+```
+
+
+Plotando os gráficos para os métodos aplicados
+```{r}
+plot(2:16, fit_asw$crit, type="o",col="purple",pch=0,xlab="Número de clústers",ylab="Criterio silueta media")
+```
+
+```{r}
+plot(2:16,fit_ch$crit,type="o",col="purple",pch=0,xlab="Número de clústers",ylab="Criterio Calinski-Harabasz")
+```
+Vemos que os valores são 3 para ambos os métodos Calinski-Harabasz e para a silhueta média, mostrados nos gráficos.
+
+
+Vamos primeiro realizar o aprendizado para k=3
+```{r}
+kmeansclusters = kmeans(var, 3)
+
+# Kernel length and width
+plot(var[c(1,2)], col=kmeansclusters$cluster)
+```
+
+```{r}
+plot(var[c(2,4)], col=kmeansclusters$cluster)
+```
+
+
+```{r}
+table(kmeansclusters$cluster, data$MaxDepth)
+```
+
+Para avaliar ainda mais o modelo obteremos a qualidade com o parâmetro Silhouette que determina a coesão dos clusters, medindo a similaridade de cada dado com os de seu cluster em relação aos dados de outros clusters. Observamos que não há valores negativos, indicando que os clusters são bem coesos.
+
+Vamos agora inspecionar os clusters.
+
+Vamos também inspecionar os gráficos de silhueta, vemos alguns valores abaixo de zero, o que indica boa qualidade no modelo. O valor médio da silhueta também é um bom indicador, vamos compará-lo com os demais modelos.
+```{r}
+library(factoextra)
+sil = silhouette(kmeansclusters$cluster,daisy(var))
+fviz_silhouette(sil,label=FALSE,print.summary=FALSE)
+```
+
+Por fim obteremos o índice dunn que também realiza uma avaliação obtendo uma razão entre a distância mínima dos dados em diferentes clusters e a distância máxima intra-cluster. Quanto maior o dunn, melhor a coesão dos clusters.
+```{r}
+clust_stats = cluster.stats(d, kmeansclusters$cluster)
+clust_stats$dunn
+```
+
+
+```{r}
+fit1 = Mclust(var)
+summary(fit1)
+```
+
+```{r}
+# BIC values used to choose the number of clusters.
+fviz_mclust(fit1, "BIC", palette = "jco")
+```
+
+```{r}
+# Classification 
+fviz_mclust(fit1, "classification", geom = "point", 
+            pointsize = 1.5, palette = "jco")
+
+```
+
+```{r}
+sil = silhouette(fit1$classification,d)
+fviz_silhouette(sil,label=FALSE,print.summary=FALSE)
+```
+
+
+```{r}
+table(fit1$classification,data$MaxDepth)
+```
+
+```{r}
+clust_stats = cluster.stats(d,fit1$classification)
+clust_stats$dunn
 ```
 
 
@@ -152,6 +411,7 @@ fviz_dend(hc.res, show_labels = FALSE,
          palette = "jco", as.ggplot = TRUE)
 ```
 
+
 ```{r}
 # Silhouette information
 silinfo = km.res$silinfo
@@ -169,48 +429,55 @@ sil = km.res$silinfo$widths[, 1:3]
 # Objects with negative silhouette
 neg_sil_index = which(sil[, 'sil_width'] < 0)
 sil[neg_sil_index, , drop = FALSE]
+```
 
+
+```{r}
 cluster.stats(d = NULL, clustering, al.clustering = NULL)
-
-library(fpc)
 # Statistics for k-means clustering
 km_stats = cluster.stats(dist(var),  km.res$cluster)
 # Dun index
 km_stats$dunn
+
+km_stats
 ```
+
 
 ```{r}
 table(data$MaxDepth, km.res$cluster)
 ```
 
+
 ```{r}
-library("fpc")
 # Compute cluster stats
-MaxDepth = as.numeric(data$MaxDepth)
+maxdepth = as.numeric(data$MaxDepth)
 clust_stats = cluster.stats(d = dist(var), 
-                             MaxDepth, km.res$cluster)
+                             maxdepth, km.res$cluster)
 # Corrected Rand index
 clust_stats$corrected.rand
 ```
 
+
 ```{r}
-# VI
 clust_stats$vi
 ```
 
 
 ```{r}
+var = scale(var)
 # Agreement between species and pam clusters
 pam.res = eclust(var, "pam", k = 3, graph = FALSE)
 table(data$MaxDepth, pam.res$cluster)
-cluster.stats(d = dist(data), 
-              MaxDepth, pam.res$cluster)$vi
+cluster.stats(d = dist(var), 
+              maxdepth, pam.res$cluster)$vi
 # Agreement between species and HC clusters
 res.hc = eclust(var, "hclust", k = 3, graph = FALSE)
 table(data$MaxDepth, res.hc$cluster)
-cluster.stats(d = dist(data), 
-              MaxDepth, res.hc$cluster)$vi
+cluster.stats(d = dist(var), 
+              maxdepth, res.hc$cluster)$vi
 ```
+
+
 Referências
 https://www.datanovia.com/en/lessons/cluster-validation-statistics-must-know-methods/
 
