@@ -3,7 +3,9 @@ title: "R Notebook"
 output: html_notebook
 ---
 
-```{r}
+```{r  echo=FALSE, message=FALSE, warning=FALSE, cache=FALSE}
+
+knitr::opts_chunk$set(fig.align="center", echo=FALSE, fig.show = "hold")
 
 # libraries ---------------------------------------------------------------
 
@@ -16,11 +18,15 @@ library(tidymodels)
 # Model specific libraries
 library(discrim)
 library(nnet)
+library(glmnet)
+
 
 ```
 
 
 ```{r}
+
+# imports data and remove na
 
 data <- 
   readr::read_delim("../data/Complexo_Bushveld.csv", 
@@ -48,19 +54,93 @@ train_data <- training(split)
 ```
 
 
+# Métodos supervisionados de aprendizagem
+
+## Enquadramento do problema
+
+A análise tem por objetivo identificar a profundidade a que cada amostra foi recolhida com base na sua composição quimica. A profundidade é uma variável categórica com 3 níveis: `"Low", "Middle", "Depth"`. Trata-se, desta forma, de uma **problema de classificação multicategoria.**
+
+Serão aplicados os seguintes modelos ao problema em análise:
+
+**1. Linear Discriminant Analysis:** Estima $P(Y = k | X = x)$ assumindo que $K_{n}$ segue uma distribuição normal multivariada e que cada ${K_{1},K_{2},...,K_{n}}$ partilha a mesma média e matriz de covariâncias. Apuradas as probabilidades à priori, utiliza o teorema de bayes para estimar a probabilidade de pertença a cada class. Face à regressão logistica tem a desvantagem de ser mais sensível a outliers.
 
 
-
-## Models
-
-Multinomial regression is used to predict the nominal target variable. In case the target variable is of ordinal type, then we need to use ordinal logistic regression. In this tutorial, we will see how we can run multinomial logistic regression. As part of data preparation, ensure that data is free of multicollinearity, outliers, and high influential leverage points. (https://www.r-bloggers.com/2020/05/multinomial-logistic-regression-with-r/)
+**2. Quadratic Discriminant Analysis:** Idêntico ao LDA,mas levanta o pressuposto que a distribuição de cada classe segeue uma distribuição normal multivariada com médias e matrizes de covariância idênticas. Comparado com LDA é um classificador mais flexivel e por isso tem mais variância. Tendo em conta o nº relativamente baixo de obervações e de classes (apenas 3) é provavel que este incremento de flexibilidade resulte num modelo com menos performance.
 
 
-Unlike binary logistic regression in multinomial logistic regression, we need to define the reference level. Please note this is specific to the function which I am using from nnet package in R. There are some functions from other R packages where you don’t really need to mention the reference level before building the model.  (https://www.r-bloggers.com/2020/05/multinomial-logistic-regression-with-r/)
-# Setting the reference
-train$Class <- relevel(train$Class, ref = "adi")
+**3. Multinomial Logistic Regression:** A regressão logistica na sua concepção mais comum, está limitada a distribuições binomiais (Binomial Logistic Regression). Uma técnica, normalmente utilizada para ultrapassar esta limitação no caso de modelo multiclass, consiste na redefinição do mesmo como um binómio do tipo *um vs todos* ou *um vs outros*. No âmbito deste projeto optou-se por uma via alternativa que consiste na substituição da função de perda (*loos function*) de *Binomial Log Loss* do género:
+
+$$log Loss = -\frac{1}{N}\sum^N_{i=1}y_{i}.log(p(y_{i})) + (1-y_{i}).log(1-p(y_{i}))$$
+
+para a sua versão generalizável:
+
+$$MultiClass Loss = -\frac{1}{N}\sum^N_{i=1}\sum^K_{k=1} 1\{Y_{i}=k\}.log(p(y_{i}=k))$$
+Expandimos, desta forma o modelo logistico para um modelo **Regressão Logistica Multinomial** utilizando a Softmax em vez da função Logit para directamente modelar $P(Y = k | X = x)$
+
+
+## Conclusões da Exploração de Dados
+
+No capítulo "1. Exploração dos dados", descrevemos cada uma das variáveis disponíveis no dataset em estudo. Dessa análise as seguintes conclusões impactam a abordagem a cada um dos modelos:
+
+- A classe em análise não é perfeitamente equilibrada existindo uma que equivale quase a soma das restantes duas. Depth representa cerca de 45% das observações e as restantes cerca de 27,5%. Apesar de não efetuarmos qualquer correção ao peso de cada classe visto não o considerarmos suficientemente pronunciado para afetar o resultado do modelo, o split inicial entre treino e teste já teve em conta este desbalanceamento garantindo que o mesmo é verificado em ambos os splits.
 
 ```{r}
+
+ggplot(data, aes(x = MaxDepth)) + geom_bar(fill = "blue")
+
+```
+
+
+- A matriz de correlações demonstra existirem correlações significativas (pearson > 0.5) entre variáveis independentes com especial relevo na correlação entre SiO2_% (Percentual de Dióxido de Silício), Cr2O3_% (Percentual de Óxido de Cromo),
+FeO_% (Percentual de Óxido de Ferro). A multicolniriedade será tratada em préprocessamente recorrendo a PCA ou à remoção de variáveis (ambas possibilidades testadas através de cross validation)
+
+- As variáveis numéricas incluem várias medidas destintas inclusivé rácios. Desta forma, o modelo poderá atribuir um peso superior a uma das variáveis fruto da sua unidade de medida. As variáveis numéricas serão normalizadas durante o préprocessamento.
+
+- Utilizando a definição de outlier de Tukey, algumas das variáveis contêm alguns valores extremos. No entanto, com base nas informações disponíveis e no conhecimento sobre o contexto to problema, não existe evidência que justifique a remoção destes valores, pelo que se optou por mantê-los durante o processo de modelação.
+
+
+## Estratégia de preprocessamento de dados
+
+Com base nas conclusões da exploração de dados e na natureza dos modelos foram definidas duas estratégias de pré-processamento dos dados:
+
+**Estratégia 1: remoção de colunas com colineralidade**
+
+1. Redução de classes do factor Stratigraphy, compactando classes com menos observações numa classe genérica "outros",
+2. Remoção de variáveis com correlação de pearson superior a 0.5
+3. Normalização de todas as variáveis numéricas
+4. Transformação das variáveis categóricas em variávies dummy
+5. Remoção de variáveis com apenas um valor distinto (baixa variância)
+
+**Estratégia 2: utilização de PCA**
+
+1. Redução de classes do factor Stratigraphy, compactando classes com menos observações numa classe genérica "outros",
+2. Substituição de variáveis correlacionadas por vetores PCA que cubram até 80% da variância
+3. Normalização de todas as variáveis numéricas
+4. Transformação das variáveis categóricas em variávies dummy
+5. Remoção de variáveis com apenas um valor distinto (baixa variância)
+
+Não temos evidência de que possa existir qualquer interacção entre a variável categórica `Stratigraphy` e as restantes variáveis pelo que a formula será definida utilizando o método aditivo.
+
+
+## Estimação dos modelos
+
+Para estimação dos modelos utilizamos LDA e QDA do package MASS e Multinomial Regression do glmnet. Apenas o modelo Multinomial contém hyperparametros os quais foram otimizados utilizando um "grid search" de 20 amostra aleatórias e escolhido o melhor valor entre eles. Este procura foi realizada em cada fold de cross validation resultando em cerca de 200 estimações do modelo.
+
+Para QDA e LDA, cross validation foi utilizado exclusivamente para cálculo das métricas médias em treino tendo o modelo final sido apurado utilizando a totalidade do valores de treino.
+
+Os hyperparametros a maximizar são:
+
+```
+penalty = Amount of Regularization ( 0 ridge 1 Lasso for shrinkage )
+mixture = Proportion of Lasso Penalty 
+
+A value of mixture = 1 corresponds to a pure lasso model, while mixture = 0 indicates ridge regression.
+
+```
+
+O código seguinte aplica as regras de processamento e de treino anteriormente definidas:
+
+```{r echo=TRUE, message=FALSE, warning=FALSE}
 # 1. specify the model
 # Has no hyperparameters
 
@@ -92,9 +172,9 @@ discrim_quad_MASS_spec <-
 # 3. decorrelate
 # 4. zero variance removed
 
-multinom_reg_nnet_spec <-
-  multinom_reg(penalty = tune()) %>%
-  set_engine('nnet')
+multinom_reg_glmnet_spec <-
+  multinom_reg(penalty = tune(), mixture = tune()) %>%
+  set_engine('glmnet')
 
 
 # 2. preprocessing 
@@ -108,7 +188,20 @@ preprocess <-
   step_normalize(all_numeric_predictors()) %>% 
   step_dummy(all_nominal_predictors()) %>% 
   step_zv(all_predictors())   #will remove columns from the data when the training set data have a single value, 
-  #step_nzv(all_predictors())
+
+
+preprocess_pca <- 
+  recipe(MaxDepth ~ . , data = train_data) %>% 
+  # keeps this features but they won't be used for fitting
+  update_role(ProjectCode, BH_ID, Motherhole,  new_role = "ID") %>%
+  step_other(Stratigraphy, threshold = 0.05) %>% 
+  # remove variables that have large absolute correlations with other variables
+  #step_corr(all_numeric_predictors(), threshold = .5) %>% 
+  step_pca(`Cr2O3_%`, `SiO2_%`, `CaO_%`, `FeO_%`, prefix = "PC", threshold = 0.8) %>% 
+  step_pca(Rh_ICP_ppm, Ir_ICP_ppm, Ru_ICP_ppm, prefix = "ICP_PC", threshold = 0.8) %>% 
+  step_normalize(all_numeric_predictors()) %>% 
+  step_dummy(all_nominal_predictors()) %>% 
+  step_zv(all_predictors())   #will remove columns from the data when the training set data have a single value, 
   
 ## Preprocessing output
 preprocessed_data <- 
@@ -116,15 +209,22 @@ preprocessed_data <-
   prep() %>% 
   bake(new_data = NULL)  
 
+preprocessed_data_pca <- 
+  preprocess_pca %>%   
+  prep() %>% 
+  bake(new_data = NULL)  
   
 # 3. Buildworkflow
 all_workflows <- 
   workflow_set(
-    preproc = list(basic = preprocess),
+    preproc = list(
+      basic = preprocess, 
+      pca = preprocess_pca
+      ),
     models = list(
       lda = discrim_linear_MASS_spec , 
-      qda = discrim_quad_MASS_spec , 
-      multinorm = multinom_reg_nnet_spec
+      qda = discrim_quad_MASS_spec ,
+      multinorm = multinom_reg_glmnet_spec
       )
   )
 
@@ -138,54 +238,193 @@ all_workflows <-
   workflow_map(resamples = folds, grid = 20, verbose = TRUE, control = fit_control)
 
 
-# 5. Fit model with all train data
-fit_model <- parsnip::fit(
-  object = discrim_linear_MASS_wflow,
-  train_data
-  ) %>% 
-  workflows::extract_fit_parsnip()
-
-
-
 ```
+
+
+## Análise dos resultados
+
+### Análise do processo de Resampling
+
 
 ```{r}
 
-rank_results(all_workflows, rank_metric = "roc_auc",select_best = TRUE)
 autoplot(all_workflows, metric = "roc_auc")
-autoplot(all_workflows, metric = "accuracy")
-
-```
-```{r}
-
-autoplot(all_workflows, metric = "roc_auc", id = "basic_multinorm") 
+autoplot(all_workflows, metric = "accuracy") 
 
 ```
 
 ```{r}
+
+knitr::kable(rank_results(all_workflows, rank_metric = "roc_auc",select_best = TRUE))
+
+```
+
+
+### Extração dos modelos e predição com base de test
+
+```{r include=FALSE}
+
+best_penalty <- all_workflows$result[[3]] %>% select_best("roc_auc")
+
+```
+
+```{r}
+
+# Extracts multinorm 
 multinorm_workflow <- 
   all_workflows %>% 
   extract_workflow("basic_multinorm")
 
-multinorm_fit <- 
+multinorm_model <- 
   multinorm_workflow %>% 
-  finalize_workflow(tibble(penalty = 0.001980769)) %>% 
+  finalize_workflow(tibble(penalty = best_penalty$penalty, mixture = best_penalty$mixture)) %>% 
+  fit(data = train_data)
+
+# Extracts lda 
+lda_workflow <- 
+  all_workflows %>% 
+  extract_workflow("pca_lda")
+
+lda_model <- 
+  lda_workflow  %>% 
+  fit(data = train_data)
+
+# Extracts multinorm 
+qda_workflow <- 
+  all_workflows %>% 
+  extract_workflow("basic_qda")
+
+qda_model <- 
+  qda_workflow %>% 
   fit(data = train_data)
 
 ```
 
 
+#### Multinomial Logistic Regression
+
+```{r}
+
+# multinomial 
+fit_test <- 
+    test_data %>% 
+    bind_cols(
+      predict(multinorm_model, new_data = test_data),
+      predict(multinorm_model, new_data = test_data, type = "prob"),
+    ) %>% 
+    mutate_if(is.numeric, round, digits= 3)
+
+# confusion matrix
+  confusion_matrix <- conf_mat(fit_test, truth = MaxDepth, estimate = .pred_class)
+  confusion_matrix_plot <- autoplot(confusion_matrix, type = "heatmap")
+  confusion_matrix_plot
+  
+```
 
 
 ```{r}
 
-rank_results(all_workflows, rank_metric = "roc_auc",select_best = TRUE)
-autoplot(all_workflows, metric = "roc_auc")
-autoplot(all_workflows, metric = "accuracy")
+roc_curve(
+      fit_test, truth = MaxDepth, 
+      .pred_Low:.pred_Depth,
+      .level = .pred_Depth) %>%  
+      autoplot() 
 
 ```
+
 ```{r}
 
-autoplot(all_workflows, metric = "roc_auc", id = "basic_multinorm") 
+roc_auc(fit_test,
+            truth = MaxDepth, 
+            .pred_Low:.pred_Depth,
+            estimator = "macro_weighted")
 
 ```
+
+#### LDA
+
+```{r}
+
+# multinomial 
+fit_test <- 
+    test_data %>% 
+    bind_cols(
+      predict(lda_model, new_data = test_data),
+      predict(lda_model, new_data = test_data, type = "prob"),
+    ) %>% 
+    mutate_if(is.numeric, round, digits= 3)
+
+# confusion matrix
+  confusion_matrix <- conf_mat(fit_test, truth = MaxDepth, estimate = .pred_class)
+  confusion_matrix_plot <- autoplot(confusion_matrix, type = "heatmap")
+  confusion_matrix_plot
+  
+```
+
+
+```{r}
+
+roc_curve(
+      fit_test, truth = MaxDepth, 
+      .pred_Low:.pred_Depth,
+      .level = .pred_Depth) %>%  
+      autoplot() 
+
+```
+
+```{r}
+
+roc_auc(fit_test,
+            truth = MaxDepth, 
+            .pred_Low:.pred_Depth,
+            estimator = "macro_weighted")
+
+```
+
+
+#### QDA
+
+```{r}
+
+# multinomial 
+fit_test <- 
+    test_data %>% 
+    bind_cols(
+      predict(qda_model, new_data = test_data),
+      predict(qda_model, new_data = test_data, type = "prob"),
+    ) %>% 
+    mutate_if(is.numeric, round, digits= 3)
+
+# confusion matrix
+  confusion_matrix <- conf_mat(fit_test, truth = MaxDepth, estimate = .pred_class)
+  confusion_matrix_plot <- autoplot(confusion_matrix, type = "heatmap")
+  confusion_matrix_plot
+  
+```
+
+
+```{r}
+
+roc_curve(
+      fit_test, truth = MaxDepth, 
+      .pred_Low:.pred_Depth,
+      .level = .pred_Depth) %>%  
+      autoplot() 
+
+```
+
+```{r}
+
+roc_auc(fit_test,
+            truth = MaxDepth, 
+            .pred_Low:.pred_Depth,
+            estimator = "macro_weighted")
+
+```
+
+## Conclusão
+
+Da nossa análise concluímos que ao modelo logistico de multiclasse é aquele que apresenta melhores resultados de entre os estudados neste projeto. No entanto é de salientar que o pressuposto ínicial de que o impacto do desbalanceamento das classes identificado inicialmente pode, afinal, ter impacto as conclusão uma vez que as matrizes de confusão revelam que a performance dos modelos difere significativamente entre classes.
+
+
+\newpage

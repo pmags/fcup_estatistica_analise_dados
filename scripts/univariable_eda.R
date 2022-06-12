@@ -40,13 +40,13 @@ data <- data %>%
 features_character <- 
   data %>%
   dplyr::select(where(is.factor), -ProjectCode, -BH_ID, -Motherhole) %>% 
-  names() %>% 
+  base::names() %>% 
   set_names()
 
 features_continuous <- 
   data %>%
   dplyr::select(-where(is.character) & -where(is.factor), -Filter) %>% 
-  names() %>% 
+  base::names() %>% 
   set_names()
 
 

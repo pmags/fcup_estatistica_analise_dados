@@ -198,7 +198,7 @@ grid.draw(eda_map$Stratigraphy)
 ```
 **Stratigraphy** representa a posição estratigráfica das camadas de cromitita dentro da **Zona Crítica** a partir da base para cima. A váriável é categorica multiclasse. Através do gráfico de frequência observamos que existem 6 zonas críticas pouco frequentes, 4 zonas críticas com frequência média e 4 zonas críticas de alta frequência.
 
-## Martriz  de Correlação
+## Matriz  de Correlação
 
 ```{r message=FALSE, warning=FALSE}
 
@@ -210,6 +210,7 @@ corrplot::corrplot(
 
 ```
 A partir da matriz de correlação acima, podemos ver que as variáveis de profundidade são altamente correlacionadas entre si, positivamente. A variável óxido de cromo tem correlação negativa com as variáveis óxido de silício e óxido de cálcio. A variável óxido de ferro também tem uma correlação negativa com a variável óxido de silício. A variável ppm de ródio tem correlação positiva com as variáveis ppm de platina, ppm de irídio e ppm de paládio. Já a variável ppm de irídio tem correlação positiva com as variáveis ppm de platina e ppm de ruténio.
+
 Essas correlações, tanto positiva quanto negativa, indicam que ao aplicarmos PCA conseguiremos um número de componentes **q** menor que o número de variáveis originais **p** que descreve bem a variabilidade dos dados.
 
 \newpage
