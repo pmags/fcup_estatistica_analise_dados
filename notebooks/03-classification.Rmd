@@ -94,7 +94,7 @@ ggplot(data, aes(x = MaxDepth)) + geom_bar(fill = "blue")
 - A matriz de correlações demonstra existirem correlações significativas (pearson > 0.5) entre variáveis independentes com especial relevo na correlação entre SiO2_% (Percentual de Dióxido de Silício), Cr2O3_% (Percentual de Óxido de Cromo),
 FeO_% (Percentual de Óxido de Ferro). A multicolniriedade será tratada em préprocessamente recorrendo a PCA ou à remoção de variáveis (ambas possibilidades testadas através de cross validation)
 
-- As variáveis numéricas incluem várias medidas destintas inclusivé rácios. Desta forma, o modelo poderá atribuir um peso superior a uma das variáveis fruto da sua unidade de medida. As variáveis numéricas serão normalizadas durante o préprocessamento.
+- As variáveis numéricas incluem várias medidas distintas inclusive rácios. Desta forma, o modelo poderá atribuir um peso superior a uma das variáveis fruto da sua unidade de medida. As variáveis numéricas serão normalizadas durante o préprocessamento.
 
 - Utilizando a definição de outlier de Tukey, algumas das variáveis contêm alguns valores extremos. No entanto, com base nas informações disponíveis e no conhecimento sobre o contexto to problema, não existe evidência que justifique a remoção destes valores, pelo que se optou por mantê-los durante o processo de modelação.
 
@@ -108,7 +108,7 @@ Com base nas conclusões da exploração de dados e na natureza dos modelos fora
 1. Redução de classes do factor Stratigraphy, compactando classes com menos observações numa classe genérica "outros",
 2. Remoção de variáveis com correlação de pearson superior a 0.5
 3. Normalização de todas as variáveis numéricas
-4. Transformação das variáveis categóricas em variávies dummy
+4. Transformação das variáveis categóricas em variáveis dummy
 5. Remoção de variáveis com apenas um valor distinto (baixa variância)
 
 **Estratégia 2: utilização de PCA**
