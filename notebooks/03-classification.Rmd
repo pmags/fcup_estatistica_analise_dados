@@ -1,0 +1,191 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r}
+
+# libraries ---------------------------------------------------------------
+
+library(ggplot2)
+library(dplyr)
+library(tidyr)
+library(magrittr)
+library(tidymodels)
+
+# Model specific libraries
+library(discrim)
+library(nnet)
+
+```
+
+
+```{r}
+
+data <- 
+  readr::read_delim("../data/Complexo_Bushveld.csv", 
+                    delim = ";", 
+                    escape_double = FALSE, 
+                    trim_ws = TRUE) %>% 
+  select(-Date)
+
+## Transforming MaxDepth in categorical
+data$MaxDepth <- cut(data$MaxDepth, breaks = c(-Inf,200, 400,Inf), right=FALSE, labels=c("Low", "Middle", "Depth"))
+data$MaxDepth <- as.factor(data$MaxDepth)
+
+data <- data %>% na.omit()
+
+```
+
+```{r}
+
+# Train vs test
+
+split <- initial_split(data, prop = 0.8, strata = MaxDepth) # random split
+test_data <- testing(split)
+train_data <- training(split)
+
+```
+
+
+
+
+
+## Models
+
+Multinomial regression is used to predict the nominal target variable. In case the target variable is of ordinal type, then we need to use ordinal logistic regression. In this tutorial, we will see how we can run multinomial logistic regression. As part of data preparation, ensure that data is free of multicollinearity, outliers, and high influential leverage points. (https://www.r-bloggers.com/2020/05/multinomial-logistic-regression-with-r/)
+
+
+Unlike binary logistic regression in multinomial logistic regression, we need to define the reference level. Please note this is specific to the function which I am using from nnet package in R. There are some functions from other R packages where you don’t really need to mention the reference level before building the model.  (https://www.r-bloggers.com/2020/05/multinomial-logistic-regression-with-r/)
+# Setting the reference
+train$Class <- relevel(train$Class, ref = "adi")
+
+```{r}
+# 1. specify the model
+# Has no hyperparameters
+
+## Suggested preprocessing:
+# 1. dummy
+# 2. impute
+# 3. decorrelate
+# 4. zero variance removed
+
+discrim_linear_MASS_spec <-
+  discrim_linear() %>%
+  set_engine('MASS') %>%
+  set_mode('classification')
+
+## Suggested preprocessing:
+# 1. dummy
+# 2. impute
+# 3. decorrelate
+# 4. zero variance removed
+
+discrim_quad_MASS_spec <-
+  discrim_quad() %>%
+  set_engine('MASS') %>%
+  set_mode('classification')
+
+## Suggested preprocessing:
+# 1. dummy
+# 2. impute
+# 3. decorrelate
+# 4. zero variance removed
+
+multinom_reg_nnet_spec <-
+  multinom_reg(penalty = tune()) %>%
+  set_engine('nnet')
+
+
+# 2. preprocessing 
+preprocess <- 
+  recipe(MaxDepth ~ . , data = train_data) %>% 
+  # keeps this features but they won't be used for fitting
+  update_role(ProjectCode, BH_ID, Motherhole,  new_role = "ID") %>%
+  step_other(Stratigraphy, threshold = 0.05) %>% 
+  # remove variables that have large absolute correlations with other variables
+  step_corr(all_numeric_predictors(), threshold = .5) %>% 
+  step_normalize(all_numeric_predictors()) %>% 
+  step_dummy(all_nominal_predictors()) %>% 
+  step_zv(all_predictors())   #will remove columns from the data when the training set data have a single value, 
+  #step_nzv(all_predictors())
+  
+## Preprocessing output
+preprocessed_data <- 
+  preprocess %>%   
+  prep() %>% 
+  bake(new_data = NULL)  
+
+  
+# 3. Buildworkflow
+all_workflows <- 
+  workflow_set(
+    preproc = list(basic = preprocess),
+    models = list(
+      lda = discrim_linear_MASS_spec , 
+      qda = discrim_quad_MASS_spec , 
+      multinorm = multinom_reg_nnet_spec
+      )
+  )
+
+# 5. Fit control and resamples for crossvalidation
+fit_control <- control_resamples(save_pred = TRUE, save_workflow = TRUE)
+folds <- vfold_cv(data = train_data, v = 10, repeats = 1)
+
+all_workflows <- 
+  all_workflows %>% 
+  # tune_grid because of multinomial hyperparameter. Grid search will only apply to this model
+  workflow_map(resamples = folds, grid = 20, verbose = TRUE, control = fit_control)
+
+
+# 5. Fit model with all train data
+fit_model <- parsnip::fit(
+  object = discrim_linear_MASS_wflow,
+  train_data
+  ) %>% 
+  workflows::extract_fit_parsnip()
+
+
+
+```
+
+```{r}
+
+rank_results(all_workflows, rank_metric = "roc_auc",select_best = TRUE)
+autoplot(all_workflows, metric = "roc_auc")
+autoplot(all_workflows, metric = "accuracy")
+
+```
+```{r}
+
+autoplot(all_workflows, metric = "roc_auc", id = "basic_multinorm") 
+
+```
+
+```{r}
+multinorm_workflow <- 
+  all_workflows %>% 
+  extract_workflow("basic_multinorm")
+
+multinorm_fit <- 
+  multinorm_workflow %>% 
+  finalize_workflow(tibble(penalty = 0.001980769)) %>% 
+  fit(data = train_data)
+
+```
+
+
+
+
+```{r}
+
+rank_results(all_workflows, rank_metric = "roc_auc",select_best = TRUE)
+autoplot(all_workflows, metric = "roc_auc")
+autoplot(all_workflows, metric = "accuracy")
+
+```
+```{r}
+
+autoplot(all_workflows, metric = "roc_auc", id = "basic_multinorm") 
+
+```
