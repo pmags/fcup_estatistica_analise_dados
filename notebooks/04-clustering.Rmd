@@ -1,0 +1,417 @@
+---
+editor_options:
+  chunk_output_type: console
+---
+
+
+```{r  echo=FALSE, message=FALSE, warning=FALSE, cache=FALSE}
+
+#source("scripts/eda.R", local = TRUE, encoding = "UTF-8")
+source("./scripts/univariable_eda.R", local = TRUE, encoding = "UTF-8")
+
+source("./scripts/pca.R", local = TRUE, encoding = "UTF-8")
+
+knitr::opts_chunk$set(fig.align="center", echo=FALSE, fig.show = "hold")
+
+```
+
+## Clusterização
+
+*Estratégia 1*: Utilizar componentes principais oriundas das variáveis originais usando o critério de pearson para escolha das componentes a serem mantidas, manteremos as componentes de forma que elas expliquem pelo menos 80% da dispersão total.
+
+Passo 1: aplicar o PCA nas variáveis geoquímicas para obter um número de componentes menor que as variáveis originais, mas que mantém a dispersão e a variabilidade dos dados.
+```{r}
+pca <- PCA(data %>% select_if(is.numeric), ncp = 7)
+```
+
+```{r}
+var = as_tibble(factoextra::get_pca_ind(pca)$coord)
+```
+
+Passo 2: ajustar o K-means variando o *kapa* para fazer uma análise de qual será o melhor kapa, utilizando o método do cotovelo.
+```{r}
+d = daisy(var)
+resultados = rep(0, 14)
+for (i in c(2,3,4,5,6,7,8,9,10,11,12,13,14,15))
+{
+  fit           = kmeans(var, i)
+  y_cluster     = fit$cluster
+  sk            = silhouette(y_cluster, d)
+  resultados[i] = fit$tot.withinss
+}
+plot(2:15,resultados[2:15],type="o",col="purple",pch=0,xlab="Número de clusters",ylab="tot.tot.withinss")
+```
+
+Passo 3: testar a função kmeansruns com os critérios asw (silhueta média) e ch (Calinski-Harabasz), que estima a razão da distância entre clusters e a distância intra-cluster, quanto maior a razão, melhor o modelo.
+```{r}
+fit_ch  = kmeansruns(var, krange = 2:15, criterion = "ch") 
+fit_asw = kmeansruns(var, krange = 2:15, criterion = "asw") 
+```
+
+Por meio do atributo best k, podemos ver que para ambos os casos o melhor k foi 3.
+```{r}
+fit_ch$bestk
+fit_asw$bestk
+```
+
+
+Passo 4: Visualizar os gráficos para os métodos aplicados: silhueta média e Calinski-Harabasz, para comprovar visualmente o que a métrica acima nos informa.
+```{r}
+plot(2:16, fit_asw$crit, type="o",col="purple",pch=0,xlab="Número de clústers",ylab="Criterio silueta media")
+```
+
+```{r}
+plot(2:16,fit_ch$crit,type="o",col="purple",pch=0,xlab="Número de clústers",ylab="Criterio Calinski-Harabasz")
+```
+Apos análisarmos os gráficos, podemos observar que os valores ótimos para o número de clusters utilizando os índices de validação é k=3 para ambos os métodos: Calinski-Harabasz e silhueta média.
+
+
+Passo 5: Desta forma, vamos realizar o aprendizado do kmeans utilizando k=3. E vamos ainda visualizar a distribuição das classes utilizando duas componentes principais, a carater de escolha pegamos as duas primeiras que melhor representam a variabilidade dos dados.
+```{r}
+kmeansclusters = kmeans(var, 3)
+
+# Kernel length and width
+plot(var[c(1,2)], col=kmeansclusters$cluster)
+```
+
+```{r}
+# K-means clustering
+km.res = eclust(var, "kmeans", k = 3, nstart = 25, graph = FALSE)
+# Visualize k-means clusters
+fviz_cluster(km.res, geom = "point", ellipse.type = "norm",
+             palette = "jco", ggtheme = theme_minimal())
+```
+
+Passo 6: Obtemos a tabela de atribuição para verificarmos o quanto nosso modelo não-supervisionado é aderente com a ralidade das classes.
+```{r}
+library("pheatmap")
+pheatmap(table(kmeansclusters$cluster, data$MaxDepth),                         
+         display_numbers = TRUE, cluster_rows = FALSE,
+         cluster_cols = FALSE) # Create heatmap with values
+
+```
+
+Passo 7: Para inspecionar os clusters os gráficos de silhueta, vemos que temos alguns valores abaixo de zero, o que indica boa qualidade no modelo. O valor médio da silhueta também é um bom indicador externo de avaliação, vamos compará-lo com os demais modelos que iremos gerar na sequência.
+```{r}
+library(factoextra)
+sil = silhouette(kmeansclusters$cluster,daisy(var))
+fviz_silhouette(sil,label=FALSE,print.summary=FALSE)
+```
+
+Passo 8: Agora vamos analisar o índice dunn que também realiza uma avaliação dos clusters utilizando um indicador externo obtendo uma razão entre a distância mínima dos dados em diferentes clusters e a distância máxima intra-cluster. Quanto maior o dunn, melhor a coesão dos clusters.
+```{r}
+clust_stats = cluster.stats(d, kmeansclusters$cluster)
+clust_stats$dunn
+```
+
+
+Passo 9: Vamos ainda analisar outros dois indicadores externos de avaliação de similaridade entre dois clusters o Corrected Rand index e o Meila's Vi 
+```{r}
+# Compute cluster stats
+maxdepth = as.numeric(data$MaxDepth)
+clust_stats = cluster.stats(d = dist(var), 
+                             maxdepth, kmeansclusters$cluster)
+# Corrected Rand index
+clust_stats$corrected.rand
+
+# VI
+clust_stats$vi
+```
+
+
+Passo 10: Utilizando clusters hierárquicos com o método "ward.D2" para podermos visualizar a hierarquia dos clusters
+```{r}
+fit = hclust(d, method="ward.D2")
+```
+
+
+```{r}
+fviz_dend(fit, k = 3, # Cut in four groups
+          cex = 0.5, # label size
+          k_colors = c("#2E9FDF", "#00AFBB", "#E7B800"),
+          color_labels_by_k = TRUE, # color labels by groups
+          rect = TRUE # Add rectangle around groups
+          )
+```
+
+
+Passo 11: Utilizamos ainda o GMM (Gaussian mixed models), com a biblioteca mclust. Neste caso utiliza-se um modelo de mistura gaussiana, que estima a probabilidade de uma amostra pertencer a cada uma das distribuições, definida por sua média e variância. Para atribuir os dados às distribuições ele usa o algoritmo Expectation-Maximization (EM).
+
+```{r}
+fit1 = Mclust(var)
+summary(fit1)
+```
+
+
+Passo 11: A partir do gráfico abaixo, podemos ver que o algorítmo estima que o número ótimo de clusters é 9 dado o modelo VVV (clusters elipsoidal, variando  volume, forma e orientação). Também podemos ver o gráfico de classificação dos dados e de incerteza (quanto maiores os pontos, maior a incerteza).
+```{r}
+# BIC values used to choose the number of clusters.
+fviz_mclust(fit1, "BIC", palette = "jco")
+```
+
+```{r}
+# Classification 
+fviz_mclust(fit1, "classification", geom = "point", 
+            pointsize = 1.5, palette = "jco")
+
+```
+
+Passo 12: Avaliar o gráfico de silhueta para o modelo ajustado anteriormente, com isso vemos que o modelo obtém menos coesão entre os grupos e um valor médio de silhueta um bem menor que o modelo anterior.
+```{r}
+sil = silhouette(fit1$classification, d)
+fviz_silhouette(sil,label=FALSE,print.summary=FALSE)
+```
+
+Passo 13: Por fim analisamos todos os indices externos que estamos avaliando:
+
+Tabela de atribuições.
+```{r}
+table(fit1$classification,data$MaxDepth)
+```
+
+Índice de dunn.
+```{r}
+clust_stats = cluster.stats(d, fit1$classification)
+clust_stats$dunn
+```
+
+
+Corrected rand index e vi
+```{r}
+# Compute cluster stats
+maxdepth = as.numeric(data$MaxDepth)
+clust_stats = cluster.stats(d = dist(var), 
+                             maxdepth, fit1$classification)
+# Corrected Rand index
+clust_stats$corrected.rand
+
+# VI
+clust_stats$vi
+```
+
+
+*Estratégia 2*: Utilizamos as variáveis originais para ajustar os métodos de clusterização.
+```{r}
+var = data[c("Cr2O3_%", "FeO_%", "SiO2_%", "MgO_%", "Al2O3_%", "CaO_%", "P_%", 
+             "Au_ICP_ppm", "Pt_ICP_ppm", "Pd_ICP_ppm", "Rh_ICP_ppm", 
+             "Ir_ICP_ppm", "Ru_ICP_ppm")]
+```
+
+```{r}
+var[is.na(var)] = 0
+any(is.na(var))
+```
+
+
+Passo 1: ajustar o K-means variando o *kapa* para fazer uma análise de qual será o melhor kapa, utilizando o método do cotovelo.
+```{r}
+d = daisy(var)
+resultados = rep(0, 14)
+for (i in c(2,3,4,5,6,7,8,9,10,11,12,13,14,15))
+{
+  fit           = kmeans(var, i)
+  y_cluster     = fit$cluster
+  sk            = silhouette(y_cluster, d)
+  resultados[i] = fit$tot.withinss
+}
+plot(2:15,resultados[2:15],type="o",col="purple",pch=0,xlab="Número de clusters",ylab="tot.tot.withinss")
+```
+
+
+Passo 2: testar a função kmeansruns com os critérios asw (silhueta média) e ch (Calinski-Harabasz), que estima a razão da distância entre clusters e a distância intra-cluster, quanto maior a razão, melhor o modelo.
+```{r}
+fit_ch  = kmeansruns(var, krange = 2:15, criterion = "ch") 
+fit_asw = kmeansruns(var, krange = 2:15, criterion = "asw") 
+```
+
+```{r}
+fit_ch$bestk
+fit_asw$bestk
+```
+
+Passo 3: Visualizar os gráficos para os métodos aplicados: silhueta média e Calinski-Harabasz, para comprovar visualmente o que a métrica acima nos informa.
+```{r}
+plot(2:16, fit_asw$crit, type="o",col="purple",pch=0,xlab="Número de clústers",ylab="Criterio silueta media")
+```
+
+```{r}
+plot(2:16,fit_ch$crit,type="o",col="purple",pch=0,xlab="Número de clústers",ylab="Criterio Calinski-Harabasz")
+```
+Apos análisarmos os gráficos, podemos observar que os valores ótimos para o número de clusters utilizando os índices de validação é k=5 para o critério de Calinski-Harabasz e k=3 para o critério da silhueta média.
+
+
+Passo 4: Desta forma, vamos realizar o aprendizado do kmeans utilizando k=3 e k=5. E vamos ainda visualizar a distribuição das classes utilizando duas componentes principais, a carater de escolha pegamos as duas primeiras que melhor representam a variabilidade dos dados.
+```{r}
+kmeansclusters3 = kmeans(var, 3)
+
+# Kernel length and width
+plot(var[c(1,2)], col=kmeansclusters3$cluster)
+```
+
+```{r}
+plot(var[c(5,1)], col=kmeansclusters3$cluster)
+```
+
+```{r}
+kmeansclusters5 = kmeans(var, 5)
+
+# Kernel length and width
+plot(var[c(1,2)], col=kmeansclusters5$cluster)
+```
+
+```{r}
+plot(var[c(5,1)], col=kmeansclusters5$cluster)
+```
+
+Passo 5: Obtemos a tabela de atribuição para verificarmos o quanto nosso modelo não-supervisionado é aderente com a ralidade das classes.
+```{r}
+pheatmap(table(kmeansclusters3$cluster, data$MaxDepth),                         
+         display_numbers = TRUE, cluster_rows = FALSE,
+         cluster_cols = FALSE) # Create heatmap with values
+```
+
+```{r}
+pheatmap(table(kmeansclusters5$cluster, data$MaxDepth),                         
+         display_numbers = TRUE, cluster_rows = FALSE,
+         cluster_cols = FALSE) # Create heatmap with values
+```
+
+Passo 6: Para inspecionar os clusters os gráficos de silhueta, vemos que temos poucos valores abaixo de zero, o que indica boa qualidade no modelo. O valor médio da silhueta é um indicador externo de avaliação, podemos ver que  valor médio da silhueta apresentado para k=3 é melhor que os valores vistos anteriormente.
+```{r}
+sil = silhouette(kmeansclusters3$cluster,daisy(var))
+fviz_silhouette(sil,label=FALSE,print.summary=FALSE)
+```
+
+```{r}
+sil = silhouette(kmeansclusters5$cluster,daisy(var))
+fviz_silhouette(sil,label=FALSE,print.summary=FALSE)
+```
+
+Passo 7: Agora vamos analisar o índice dunn que também realiza uma avaliação dos clusters utilizando um indicador externo obtendo uma razão entre a distância mínima dos dados em diferentes clusters e a distância máxima intra-cluster. Quanto maior o dunn, melhor a coesão dos clusters.
+```{r}
+clust_stats = cluster.stats(d, kmeansclusters3$cluster)
+clust_stats$dunn
+```
+
+```{r}
+clust_stats = cluster.stats(d, kmeansclusters5$cluster)
+clust_stats$dunn
+```
+
+
+Passo 8: Vamos ainda analisar outros dois indicadores externos de avaliação de similaridade entre dois clusters o Corrected Rand index e o Meila's Vi 
+```{r}
+# Compute cluster stats
+maxdepth = as.numeric(data$MaxDepth)
+clust_stats = cluster.stats(d = dist(var), 
+                             maxdepth, kmeansclusters3$cluster)
+# Corrected Rand index
+clust_stats$corrected.rand
+
+# VI
+clust_stats$vi
+```
+
+```{r}
+# Compute cluster stats
+maxdepth = as.numeric(data$MaxDepth)
+clust_stats = cluster.stats(d = dist(var), 
+                             maxdepth, kmeansclusters5$cluster)
+# Corrected Rand index
+clust_stats$corrected.rand
+
+# VI
+clust_stats$vi
+```
+
+
+
+Passo 9: Utilizando clusters hierárquicos com o método "ward.D2" para podermos visualizar a hierarquia dos clusters.
+k=3
+```{r}
+# Hierarchical clustering
+hc.res = eclust(var, "hclust", k = 3, hc_metric = "euclidean", 
+                 hc_method = "ward.D2", graph = FALSE)
+
+# Visualize dendrograms
+fviz_dend(hc.res, show_labels = FALSE,
+         palette = "jco", as.ggplot = TRUE)
+```
+
+k=5
+```{r}
+# Hierarchical clustering
+hc.res = eclust(var, "hclust", k = 5, hc_metric = "euclidean", 
+                 hc_method = "ward.D2", graph = FALSE)
+
+# Visualize dendrograms
+fviz_dend(hc.res, show_labels = FALSE,
+         palette = "jco", as.ggplot = TRUE)
+```
+
+
+
+Passo 10: Utilizamos ainda o GMM (Gaussian mixed models), com a biblioteca mclust. Neste caso utiliza-se um modelo de mistura gaussiana, que estima a probabilidade de uma amostra pertencer a cada uma das distribuições, definida por sua média e variância. Para atribuir os dados às distribuições ele usa o algoritmo Expectation-Maximization (EM).
+```{r}
+fit2 = Mclust(var)
+summary(fit2)
+```
+
+Passo 11: Avaliar o gráfico de silhueta para o modelo ajustado anteriormente, com isso vemos que o modelo obtém menos coesão entre os grupos e um valor médio de silhueta um bem menor que o modelo anterior.
+```{r}
+# BIC values used to choose the number of clusters.
+fviz_mclust(fit2, "BIC", palette = "jco")
+```
+
+Passo 12: A partir do gráfico abaixo, podemos ver que o algorítmo estima que o número ótimo de clusters é 7 dado o modelo EEV (clusters elipsoidal, com valores iguais de  volume e forma). Também podemos ver o gráfico de classificação dos dados e de incerteza (quanto maiores os pontos, maior a incerteza).
+```{r}
+# Classification 
+fviz_mclust(fit2, "classification", geom = "point", 
+            pointsize = 1.5, palette = "jco")
+
+```
+
+
+```{r}
+# Classification uncertainty
+fviz_mclust(fit2, "uncertainty", palette = "jco")
+```
+
+Passo 13: Avaliar o gráfico de silhueta para o modelo ajustado anteriormente, com isso vemos que o modelo obtém menos coesão entre os grupos e um valor médio de silhueta um bem menor que o modelo anterior.
+```{r}
+sil = silhouette(fit2$classification, d)
+fviz_silhouette(sil,label=FALSE,print.summary=FALSE)
+```
+Passo 14: Por fim analisamos todos os indices externos que estamos avaliando:
+
+Tabela de atribuições.
+```{r}
+table(fit2$classification,data$MaxDepth)
+```
+
+O índice dunn.
+```{r}
+clust_stats = cluster.stats(d,fit2$classification)
+clust_stats$dunn
+```
+
+
+Corrected rand index e vi
+```{r}
+# Compute cluster stats
+maxdepth = as.numeric(data$MaxDepth)
+clust_stats = cluster.stats(d = dist(var), 
+                             maxdepth, fit2$classification)
+# Corrected Rand index
+clust_stats$corrected.rand
+
+# VI
+clust_stats$vi
+```
+
+
+Conclusão: a partir das analises não supervisionada realizada acima por meior do método de clusterização, podemos concluir que por meio da clusterização utilizando as variáveis originais, o método kmeans com kapa=3, tivemos o melhor valor de silhoeta média 0.47 por meio do indice de validação externa. E como essa métrica nos diz a coerência entre os clusters seguiriamos com essas configurações como escolha do melhor modelo não supervisionado ajustado aos nossos dados.
+
+
+\newpage
+
